@@ -1,0 +1,356 @@
+/* style.css */
+
+/* Variables CSS pour les couleurs - Palette Bleu Royal et Rouge Intense */
+:root {
+    --primary-color: #002060; /* Bleu Royal profond pour les éléments principaux */
+    --secondary-color: #8B0000; /* Rouge Foncé classique pour les accents secondaires */
+    --accent-color: #C00000; /* Rouge Cramoisi/Rubis pour les éléments interactifs et dynamiques */
+    --text-color-dark: #1A1A1A; /* Noir très foncé pour les titres et textes importants */
+    --text-color-medium: #333333; /* Gris foncé pour le corps du texte, excellente lisibilité */
+    --light-bg: #FDFDFD; /* Fond très clair, presque blanc cassé pour une sensation premium */
+    --medium-bg: #F0F4F8; /* Fond légèrement plus foncé, un bleu-gris très doux pour les sections */
+    --code-bg: #F5F5F5; /* Arrière-plan des blocs de code, un gris très clair et neutre */
+    --border-color: #D3D3D3; /* Couleur de bordure douce et subtile */
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 0;
+    line-height: 1.75; /* Amélioration significative de l'interligne pour le confort de lecture */
+    color: var(--text-color-medium); /* Utilisation du gris moyen pour le corps du texte */
+    background-color: var(--light-bg);
+    overflow-x: hidden; /* Empêche le défilement horizontal indésirable */
+}
+
+.container {
+    max-width: 1200px; /* Largeur maximale pour le contenu central */
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 1.5rem; /* Padding horizontal pour une meilleure gestion sur mobile */
+}
+
+/* Titre Principal */
+h1.main-title {
+    color: var(--primary-color); /* Couleur Bleu Royal */
+    font-size: 3.8rem; /* Grande taille pour le titre */
+    font-weight: 900; /* Extra Black pour un impact maximal */
+    text-shadow: 4px 4px 8px rgba(0,0,0,0.2); /* Ombre plus prononcée pour la profondeur */
+    text-align: center;
+    padding: 3rem 0; /* Plus de padding vertical */
+    background: linear-gradient(to right, #ffffff, var(--medium-bg)); /* Dégradé subtil et élégant */
+    border-bottom-left-radius: 40px; /* Coins très arrondis pour un look moderne */
+    border-bottom-right-radius: 40px;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15); /* Ombre douce et étendue pour un effet de flottement */
+    letter-spacing: -0.03em; /* Réduit légèrement l'espacement des lettres pour une meilleure cohésion */
+}
+
+/* Titres de Partie (Partie I, Partie II) */
+.part-title {
+    color: var(--primary-color); /* Couleur Bleu Royal */
+    border-left: 12px solid var(--secondary-color); /* Bordure épaisse avec le Rouge Foncé */
+    padding: 2rem 1.8rem; /* Padding généreux */
+    font-size: 2.8rem; /* Grande taille pour la hiérarchie */
+    font-weight: 800; /* Extra Bold */
+    margin-top: 6rem; /* Plus d'espace au-dessus */
+    margin-bottom: 3rem; /* Plus d'espace en dessous */
+    border-radius: 10px; /* Coins plus arrondis */
+    background-color: #ffffff; /* Fond blanc pur */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); /* Ombre définie */
+    position: relative;
+    overflow: hidden;
+}
+.part-title::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.25) 100%); /* Overlay dégradé subtil pour un effet de brillance */
+    z-index: 1;
+}
+
+/* Sous-titres de Section (1. Introduction, 2. Opérations Fondamentales) */
+.sub-section-title {
+    color: var(--text-color-dark); /* Texte noir foncé pour un contraste élevé */
+    font-size: 2.2rem; /* Taille de police plus grande */
+    font-weight: 700; /* Bold */
+    margin-top: 3.5rem; /* Espace généreux */
+    margin-bottom: 1.8rem;
+    border-bottom: 3px solid var(--border-color); /* Bordure inférieure plus marquée */
+    padding-bottom: 1rem;
+    text-align: left;
+}
+
+/* Titres de Sous-sections (a. Opération de Sélection) */
+h4.text-xl.font-semibold.text-gray-700 {
+    margin-top: 3rem;
+    margin-bottom: 1.2rem;
+    color: var(--text-color-dark);
+    font-size: 1.8rem; /* Taille de police plus grande */
+    font-weight: 600; /* Semi-bold */
+}
+
+/* Titres de Notation */
+h5.font-bold.text-gray-800 {
+    margin-top: 1.8rem;
+    margin-bottom: 1rem;
+    color: var(--text-color-dark);
+    font-size: 1.2rem;
+}
+
+/* Paragraphes de texte */
+p {
+    margin-bottom: 1.6rem; /* Plus d'espace entre les paragraphes */
+    font-size: 1.1rem; /* Taille de police légèrement augmentée pour la lecture */
+    color: var(--text-color-medium);
+}
+
+/* Blocs de Code */
+.code-block {
+    background-color: var(--code-bg);
+    border-left: 8px solid var(--accent-color); /* Bordure épaisse avec le Rouge Cramoisi */
+    padding: 1.8rem; /* Plus de padding */
+    margin: 2.5rem 0; /* Plus de marge */
+    border-radius: 15px; /* Coins très arrondis */
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); /* Ombre plus douce et étendue */
+}
+
+.code-block pre {
+    margin: 0;
+    font-size: 1.05rem; /* Taille de police plus lisible pour le code */
+    color: #222; /* Texte sombre pour le code */
+    line-height: 1.6; /* Interligne pour le code */
+}
+
+/* Boutons "Exemple" et "Application" */
+.example-toggle, .application-toggle {
+    background-color: var(--accent-color); /* Rouge Cramoisi */
+    color: white;
+    padding: 1.2rem 2.5rem; /* Boutons plus grands et plus cliquables */
+    border-radius: 35px; /* Très arrondis pour un aspect moderne */
+    cursor: pointer;
+    font-weight: 700; /* Bold */
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    display: inline-block;
+    margin-top: 2.5rem; /* Plus d'espace au-dessus */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* Ombre plus prononcée pour un effet 3D */
+    text-transform: uppercase;
+    letter-spacing: 0.08em; /* Espacement des lettres légèrement augmenté */
+    border: none;
+    font-size: 1.1rem; /* Texte plus grand sur les boutons */
+}
+
+.example-toggle:hover, .application-toggle:hover {
+    background-color: #A00000; /* Teinte plus foncée du Rouge Cramoisi au survol */
+    transform: translateY(-5px); /* Effet de soulèvement plus prononcé */
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.35); /* Ombre plus grande et plus diffuse au survol */
+}
+
+/* Contenu Caché (Exemples, Corrections) */
+.hidden-content {
+    display: none;
+    margin-top: 2.5rem;
+    padding: 2.5rem; /* Plus de padding */
+    background-color: #EBF8FF; /* Un fond bleu ciel très doux, en accord avec le bleu royal */
+    border-radius: 15px; /* Coins très arrondis */
+    border: 1px solid #BEE3F8; /* Bordure douce */
+    box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.05); /* Ombre interne très subtile */
+}
+
+/* Tableaux de Résultats */
+.result-table {
+    width: 100%;
+    border-collapse: separate; /* Permet d'appliquer border-radius aux cellules */
+    border-spacing: 0; /* Important pour border-radius */
+    margin-top: 2.5rem;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1); /* Ombre plus élégante et diffuse */
+    border-radius: 12px; /* Coins arrondis pour la table entière */
+    overflow: hidden; /* Cache le débordement pour les coins arrondis */
+}
+
+.result-table th, .result-table td {
+    border: none; /* Supprime les bordures individuelles pour un look plus moderne */
+    border-bottom: 1px solid #E0E0E0; /* Bordure inférieure fine pour la séparation des lignes */
+    padding: 16px 20px; /* Plus de padding pour les cellules, meilleure aération */
+    text-align: left;
+    vertical-align: top;
+}
+
+.result-table th {
+    background-color: #F1F5F9; /* Fond neutre et élégant pour les en-têtes */
+    font-weight: 700; /* Bold */
+    color: var(--text-color-dark); /* Couleur de texte sombre */
+    text-transform: uppercase;
+    font-size: 1rem; /* Taille de police légèrement plus grande */
+    letter-spacing: 0.04em;
+}
+/* Coins arrondis pour le haut du tableau */
+.result-table th:first-child { border-top-left-radius: 12px; }
+.result-table th:last-child { border-top-right-radius: 12px; }
+
+/* Effet de rayure sur les lignes */
+.result-table tr:nth-child(even) {
+    background-color: #FDFEFE; /* Bandes très légères, presque imperceptibles */
+}
+
+/* Effet de survol sur les lignes du tableau */
+.result-table tr:hover {
+    background-color: #EAF5FF; /* Effet de survol avec un bleu très doux */
+    transition: background-color 0.2s ease;
+}
+/* Coins arrondis pour le bas du tableau */
+.result-table tr:last-child td:first-child { border-bottom-left-radius: 12px; }
+.result-table tr:last-child td:last-child { border-bottom-right-radius: 12px; }
+
+/* Footer */
+footer {
+    background-color: var(--primary-color); /* Fond Bleu Royal */
+    color: white;
+    text-align: center;
+    padding: 3rem; /* Plus de padding */
+    margin-top: 8rem; /* Plus d'espace au-dessus */
+    border-top-left-radius: 40px; /* Coins très arrondis */
+    border-top-right-radius: 40px;
+    box-shadow: 0 -10px 25px rgba(0, 0, 0, 0.15); /* Ombre prononcée vers le haut */
+    font-size: 1.05rem; /* Taille de police légèrement plus grande */
+    letter-spacing: 0.04em;
+}
+
+/* Styles pour les listes */
+ul.list-disc, ol.list-decimal {
+    margin-left: 3rem; /* Plus d'indentation */
+    margin-bottom: 2.5rem; /* Plus de marge */
+}
+
+ul.list-disc li, ol.list-decimal li {
+    margin-bottom: 1rem; /* Plus d'espace entre les éléments de liste */
+    font-size: 1.1rem;
+    color: var(--text-color-medium);
+}
+
+/* Media Queries pour le Responsive Design */
+@media (max-width: 768px) {
+    h1.main-title {
+        font-size: 3rem;
+        padding: 2.2rem 0;
+        border-bottom-left-radius: 30px;
+        border-bottom-right-radius: 30px;
+    }
+    .part-title {
+        font-size: 2.2rem;
+        padding: 1.5rem 1.2rem;
+        margin-top: 4.5rem;
+        margin-bottom: 2rem;
+    }
+    .sub-section-title {
+        font-size: 1.8rem;
+        margin-top: 2.5rem;
+        margin-bottom: 1.5rem;
+    }
+    h4.text-xl.font-semibold.text-gray-700 {
+        font-size: 1.5rem;
+        margin-top: 2rem;
+    }
+    p, ul.list-disc li, ol.list-decimal li {
+        font-size: 1rem;
+        line-height: 1.6;
+    }
+    .code-block {
+        padding: 1.2rem;
+        margin: 1.8rem 0;
+        border-radius: 10px;
+    }
+    .code-block pre {
+        font-size: 0.95rem;
+    }
+    .example-toggle, .application-toggle {
+        padding: 1rem 2rem;
+        font-size: 1rem;
+        border-radius: 30px;
+        margin-top: 2rem;
+    }
+    .hidden-content {
+        padding: 1.8rem;
+        margin-top: 1.8rem;
+        border-radius: 10px;
+    }
+    .result-table th, .result-table td {
+        padding: 12px 15px;
+        font-size: 0.9rem;
+    }
+    footer {
+        padding: 2.2rem;
+        border-top-left-radius: 30px;
+        border-top-right-radius: 30px;
+    }
+    .container {
+        padding: 0 1.2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    h1.main-title {
+        font-size: 2.5rem;
+        padding: 1.5rem 0;
+        border-bottom-left-radius: 20px;
+        border-bottom-right-radius: 20px;
+    }
+    .part-title {
+        font-size: 1.8rem;
+        padding: 1.2rem 1rem;
+        margin-top: 3.5rem;
+        margin-bottom: 1.8rem;
+    }
+    .sub-section-title {
+        font-size: 1.5rem;
+        margin-top: 2rem;
+    }
+    h4.text-xl.font-semibold.text-gray-700 {
+        font-size: 1.3rem;
+    }
+    p, ul.list-disc li, ol.list-decimal li {
+        font-size: 0.95rem;
+        line-height: 1.5;
+    }
+    .code-block {
+        padding: 1rem;
+        margin: 1.5rem 0;
+        border-radius: 8px;
+    }
+    .code-block pre {
+        font-size: 0.88rem;
+    }
+    .example-toggle, .application-toggle {
+        padding: 0.9rem 1.5rem;
+        font-size: 0.9rem;
+        border-radius: 25px;
+        margin-top: 1.5rem;
+        display: block; /* Boutons en bloc sur les tout petits écrans */
+        width: 100%;
+        text-align: center;
+    }
+    .hidden-content {
+        padding: 1.5rem;
+        margin-top: 1.5rem;
+        border-radius: 8px;
+    }
+    .result-table th, .result-table td {
+        padding: 10px;
+        font-size: 0.85rem;
+    }
+    footer {
+        padding: 1.8rem;
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
+        font-size: 0.9rem;
+    }
+    ul.list-disc, ol.list-decimal {
+        margin-left: 2rem;
+        margin-bottom: 1.5rem;
+    }
+}

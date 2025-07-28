@@ -1,11 +1,2469 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Algèbre Relationnel & Langage SQL</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Chargement de Tailwind CSS pour un style professionnel -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Styles personnalisés pour le jeu des couleurs - Assurez-vous que ces couleurs sont cohérentes avec style.css */
+        :root {
+            --primary-color: #002060; /* Bleu Royal profond pour les éléments principaux */
+            --secondary-color: #8B0000; /* Rouge Foncé classique pour les accents secondaires */
+            --accent-color: #C00000; /* Rouge Cramoisi/Rubis pour les éléments interactifs et dynamiques */
+            --text-color-dark: #1A1A1A; /* Noir très foncé pour les titres et textes importants */
+            --text-color-medium: #333333; /* Gris foncé pour le corps du texte, excellente lisibilité */
+            --light-bg: #FDFDFD; /* Fond très clair, presque blanc cassé pour une sensation premium */
+            --medium-bg: #F0F4F8; /* Fond légèrement plus foncé, un bleu-gris très doux pour les sections */
+            --code-bg: #F5F5F5; /* Arrière-plan des blocs de code, un gris très clair et neutre */
+            --border-color: #D3D3D3; /* Couleur de bordure douce et subtile */
+        }
+        body {
+            font-family: "Inter", sans-serif;
+            color: var(--text-color-medium);
+            background-color: var(--light-bg);
+            overflow-x: hidden; /* Prevent horizontal scrolling */
+        }
+        /* Styles pour le titre principal (déplacés en partie ici pour l'intégration des variables) */
+        .main-title {
+            color: var(--primary-color);
+            font-size: 3.8rem;
+            font-weight: 900;
+            text-shadow: 4px 4px 8px rgba(0,0,0,0.2);
+            text-align: center;
+            padding: 3rem 0;
+            background: linear-gradient(to right, #ffffff, var(--medium-bg));
+            border-bottom-left-radius: 40px;
+            border-bottom-right-radius: 40px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+            letter-spacing: -0.03em;
+        }
+        /* Styles pour les titres de partie (déplacés en partie ici pour l'intégration des variables) */
+        .part-title {
+            color: var(--primary-color);
+            border-left: 12px solid var(--secondary-color);
+            padding: 2rem 1.8rem;
+            font-size: 2.8rem;
+            font-weight: 800;
+            margin-top: 6rem;
+            margin-bottom: 3rem;
+            border-radius: 10px;
+            background-color: #ffffff;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        .part-title::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.25) 100%);
+            z-index: 1;
+        }
+        /* Styles pour les sous-titres de section (déplacés en partie ici pour l'intégration des variables) */
+        .sub-section-title {
+            color: var(--text-color-dark);
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-top: 3.5rem;
+            margin-bottom: 1.8rem;
+            border-bottom: 3px solid var(--border-color);
+            padding-bottom: 1rem;
+            text-align: left;
+        }
+        /* Styles pour les titres de sous-sections (h4) */
+        h4.text-xl.font-semibold.text-gray-700 {
+            margin-top: 3rem;
+            margin-bottom: 1.2rem;
+            color: var(--text-color-dark);
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+        /* Styles pour les titres de notation (h5) */
+        h5.font-bold.text-gray-800 {
+            margin-top: 1.8rem;
+            margin-bottom: 1rem;
+            color: var(--text-color-dark);
+            font-size: 1.2rem;
+        }
+        /* Styles pour les paragraphes */
+        p {
+            margin-bottom: 1.6rem;
+            font-size: 1.1rem;
+            color: var(--text-color-medium);
+        }
+        /* Styles pour les blocs de code */
+        .code-block {
+            background-color: var(--code-bg);
+            border-left: 8px solid var(--accent-color);
+            padding: 1.8rem;
+            margin: 2.5rem 0;
+            border-radius: 15px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        .code-block pre {
+            margin: 0;
+            font-size: 1.05rem;
+            color: #222;
+            line-height: 1.6;
+        }
+        /* Styles pour les boutons toggle */
+        .example-toggle, .application-toggle {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 1.2rem 2.5rem;
+            border-radius: 35px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            display: inline-block;
+            margin-top: 2.5rem;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            border: none;
+            font-size: 1.1rem;
+        }
+        .example-toggle:hover, .application-toggle:hover {
+            background-color: #A00000; /* Darker accent on hover */
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.35);
+        }
+        /* Styles pour le contenu caché */
+        .hidden-content {
+            display: none;
+            margin-top: 2.5rem;
+            padding: 2.5rem;
+            background-color: #EBF8FF; /* Light blue background */
+            border-radius: 15px;
+            border: 1px solid #BEE3F8;
+            box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.05);
+        }
+        /* Styles pour les tableaux de résultats */
+        .result-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 2.5rem;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .result-table th, .result-table td {
+            border: none;
+            border-bottom: 1px solid #E0E0E0;
+            padding: 16px 20px;
+            text-align: left;
+            vertical-align: top;
+        }
+        .result-table th {
+            background-color: #F1F5F9;
+            font-weight: 700;
+            color: var(--text-color-dark);
+            text-transform: uppercase;
+            font-size: 1rem;
+            letter-spacing: 0.04em;
+        }
+        .result-table th:first-child { border-top-left-radius: 12px; }
+        .result-table th:last-child { border-top-right-radius: 12px; }
+        .result-table tr:nth-child(even) {
+            background-color: #FDFEFE;
+        }
+        .result-table tr:hover {
+            background-color: #EAF5FF;
+            transition: background-color 0.2s ease;
+        }
+        .result-table tr:last-child td:first-child { border-bottom-left-radius: 12px; }
+        .result-table tr:last-child td:last-child { border-bottom-right-radius: 12px; }
+        /* Styles pour le footer */
+        footer {
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+            padding: 3rem;
+            margin-top: 8rem;
+            border-top-left-radius: 40px;
+            border-top-right-radius: 40px;
+            box-shadow: 0 -10px 25px rgba(0, 0, 0, 0.15);
+            font-size: 1.05rem;
+            letter-spacing: 0.04em;
+        }
+        /* Styles pour les listes */
+        ul.list-disc, ol.list-decimal {
+            margin-left: 3rem;
+            margin-bottom: 2.5rem;
+        }
+        ul.list-disc li, ol.list-decimal li {
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            color: var(--text-color-medium);
+        }
+        /* Responsive design (Media Queries) */
+        @media (max-width: 768px) {
+            .main-title {
+                font-size: 3rem;
+                padding: 2.2rem 0;
+                border-bottom-left-radius: 30px;
+                border-bottom-right-radius: 30px;
+            }
+            .part-title {
+                font-size: 2.2rem;
+                padding: 1.5rem 1.2rem;
+                margin-top: 4.5rem;
+                margin-bottom: 2rem;
+            }
+            .sub-section-title {
+                font-size: 1.8rem;
+                margin-top: 2.5rem;
+                margin-bottom: 1.5rem;
+            }
+            h4.text-xl.font-semibold.text-gray-700 {
+                font-size: 1.5rem;
+                margin-top: 2rem;
+            }
+            p, ul.list-disc li, ol.list-decimal li {
+                font-size: 1rem;
+                line-height: 1.6;
+            }
+            .code-block {
+                padding: 1.2rem;
+                margin: 1.8rem 0;
+                border-radius: 10px;
+            }
+            .code-block pre {
+                font-size: 0.95rem;
+            }
+            .example-toggle, .application-toggle {
+                padding: 1rem 2rem;
+                font-size: 1rem;
+                border-radius: 30px;
+                margin-top: 2rem;
+            }
+            .hidden-content {
+                padding: 1.8rem;
+                margin-top: 1.8rem;
+                border-radius: 10px;
+            }
+            .result-table th, .result-table td {
+                padding: 12px 15px;
+                font-size: 0.9rem;
+            }
+            footer {
+                padding: 2.2rem;
+                border-top-left-radius: 30px;
+                border-top-right-radius: 30px;
+            }
+            .container {
+                padding: 0 1.2rem;
+            }
+        }
+        @media (max-width: 480px) {
+            .main-title {
+                font-size: 2.5rem;
+                padding: 1.5rem 0;
+                border-bottom-left-radius: 20px;
+                border-bottom-right-radius: 20px;
+            }
+            .part-title {
+                font-size: 1.8rem;
+                padding: 1.2rem 1rem;
+                margin-top: 3.5rem;
+                margin-bottom: 1.8rem;
+            }
+            .sub-section-title {
+                font-size: 1.5rem;
+                margin-top: 2rem;
+            }
+            h4.text-xl.font-semibold.text-gray-700 {
+                font-size: 1.3rem;
+            }
+            p, ul.list-disc li, ol.list-decimal li {
+                font-size: 0.95rem;
+                line-height: 1.5;
+            }
+            .code-block {
+                padding: 1rem;
+                margin: 1.5rem 0;
+                border-radius: 8px;
+            }
+            .code-block pre {
+                font-size: 0.88rem;
+            }
+            .example-toggle, .application-toggle {
+                padding: 0.9rem 1.5rem;
+                font-size: 0.9rem;
+                border-radius: 25px;
+                margin-top: 1.5rem;
+                display: block;
+                width: 100%;
+                text-align: center;
+            }
+            .hidden-content {
+                padding: 1.5rem;
+                margin-top: 1.5rem;
+                border-radius: 8px;
+            }
+            .result-table th, .result-table td {
+                padding: 10px;
+                font-size: 0.85rem;
+            }
+            footer {
+                padding: 1.8rem;
+                border-top-left-radius: 20px;
+                border-top-right-radius: 20px;
+                font-size: 0.9rem;
+            }
+            ul.list-disc, ol.list-decimal {
+                margin-left: 2rem;
+                margin-bottom: 1.5rem;
+            }
+        }
+    </style>
 </head>
-<body>
-    
+<body class="mx-auto">
+    <!-- Titre principal -->
+    <h1 class="main-title">SUPPORT DE COURS : ALGEBRE RELATIONNEL & LANGAGE SQL</h1>
+
+    <div class="container mx-auto px-4 py-8">
+        <!-- Partie I: Algèbre relationnel -->
+        <section id="partie-i">
+            <h2 class="part-title">Partie I: Algèbre relationnel</h2>
+
+            <!-- Introduction à l'Algèbre Relationnelle -->
+            <section id="introduction-algebre">
+                <h3 class="sub-section-title">1. Introduction à l'Algèbre Relationnelle</h3>
+                <p class="mb-4">
+                    L'algèbre relationnelle est un langage formel utilisé pour manipuler et interroger des bases de données relationnelles. Elle repose sur des opérations permettant de traiter des relations (tables) et d'obtenir des résultats sous forme de nouvelles relations. Elle constitue le fondement théorique des langages de requêtes comme SQL.
+                </p>
+            </section>
+
+            <!-- Les Opérations Fondamentales -->
+            <section id="operations-fondamentales">
+                <h3 class="sub-section-title">2. Les Opérations Fondamentales</h3>
+                <p class="mb-4">
+                    L'algèbre relationnelle comprend plusieurs opérations fondamentales permettant de filtrer et de transformer les données stockées dans les relations.
+                </p>
+
+                <!-- Opération de Sélection -->
+                <h4 class="text-xl font-semibold text-gray-700 mb-2">a. Opération de Sélection (&#963;)</h4>
+                <p class="mb-4">
+                    La sélection permet d'extraire les lignes (ou tuples) d'une relation qui vérifient une condition donnée.
+                </p>
+                <h5 class="font-bold text-gray-800 mb-2">Notation :</h5>
+                <div class="code-block">
+                    <pre class="font-mono text-sm">&#963;<sub>condition</sub>(R)</pre>
+                </div>
+                <p class="mb-4">
+                    Où R est une relation et condition est un critère de filtrage.
+                </p>
+                <button class="example-toggle" data-target="selection-example">Exemple</button>
+                <div id="selection-example" class="hidden-content">
+                    <p class="font-semibold mb-2">Exemple :</p>
+                    <p class="mb-2">
+                        Si nous avons une table Employés (Nom, Age, Salaire), et nous voulons sélectionner les employés ayant un salaire supérieur à 3000, nous écrivons :
+                    </p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">&#963;<sub>Salaire>3000</sub>(Employes)</pre>
+                    </div>
+                    <p class="font-semibold mt-4 mb-2">Résultat de la requête (Tableau Résultant) :</p>
+                    <table class="result-table">
+                        <thead>
+                            <tr>
+                                <th>Nom</th>
+                                <th>Age</th>
+                                <th>Salaire</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Alice</td>
+                                <td>30</td>
+                                <td>3500</td>
+                            </tr>
+                            <tr>
+                                <td>Charles</td>
+                                <td>45</td>
+                                <td>4200</td>
+                            </tr>
+                            <!-- Plus de lignes si nécessaire pour un exemple complet -->
+                        </tbody>
+                    </table>
+                    <p class="mt-2 text-sm text-gray-600">
+                        Cette requête retourne tous les employés de la table "Employes" dont le salaire est strictement supérieur à 3000.
+                    </p>
+                </div>
+
+                <!-- Opération de Projection -->
+                <h4 class="text-xl font-semibold text-gray-700 mb-2">b. Opération de Projection (&#960;)</h4>
+                <p class="mb-4">
+                    La projection permet de sélectionner certaines colonnes d'une relation.
+                </p>
+                <h5 class="font-bold text-gray-800 mb-2">Notation :</h5>
+                <div class="code-block">
+                    <pre class="font-mono text-sm">&#960;<sub>attributs</sub>(R)</pre>
+                </div>
+                <p class="mb-4">
+                    Où attributs sont les colonnes à conserver.
+                </p>
+                <button class="example-toggle" data-target="projection-example">Exemple</button>
+                <div id="projection-example" class="hidden-content">
+                    <p class="font-semibold mb-2">Exemple :</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">&#960;<sub>Nom, Salaire</sub>(Employes)</pre>
+                    </div>
+                    <p class="mb-2">
+                        Renvoie une nouvelle relation ne contenant que les colonnes Nom et Salaire.
+                    </p>
+                    <p class="font-semibold mt-4 mb-2">Résultat de la requête (Tableau Résultant) :</p>
+                    <table class="result-table">
+                        <thead>
+                            <tr>
+                                <th>Nom</th>
+                                <th>Salaire</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Alice</td>
+                                <td>3500</td>
+                            </tr>
+                            <tr>
+                                <td>Bob</td>
+                                <td>2800</td>
+                            </tr>
+                            <tr>
+                                <td>Charles</td>
+                                <td>4200</td>
+                            </tr>
+                            <!-- Plus de lignes si nécessaire -->
+                        </tbody>
+                    </table>
+                    <p class="mt-2 text-sm text-gray-600">
+                        Cette requête retourne une nouvelle table contenant uniquement les noms et salaires des employés.
+                    </p>
+                </div>
+
+                <!-- Opération de Jointure -->
+                <h4 class="text-xl font-semibold text-gray-700 mb-2">c. Opération de Jointure (⋈)</h4>
+                <p class="mb-4">
+                    La jointure permet de combiner des relations sur la base d'un attribut commun.
+                </p>
+                <h5 class="font-bold text-gray-800 mb-2">Notation :</h5>
+                <div class="code-block">
+                    <pre class="font-mono text-sm">R ⋈<sub>condition</sub> S</pre>
+                </div>
+                <p class="mb-4">
+                    Où R et S sont deux relations et condition est le critère de jointure.
+                </p>
+                <button class="example-toggle" data-target="jointure-example">Exemple</button>
+                <div id="jointure-example" class="hidden-content">
+                    <p class="font-semibold mb-2">Exemple :</p>
+                    <p class="mb-2">
+                        Si nous avons une table Employés (Id, Nom, #IdDept) et une table Départements (IdDept, NomDept), une jointure sur IdDept permet d'obtenir les noms des employés avec leur département:
+                    </p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">Employes ⋈<sub>Employes.IdDept=Departements.IdDept</sub> Departements</pre>
+                    </div>
+                    <p class="font-semibold mt-4 mb-2">Résultat de la requête (Tableau Résultant) :</p>
+                    <table class="result-table">
+                        <thead>
+                            <tr>
+                                <th>Employes.Id</th>
+                                <th>Employes.Nom</th>
+                                <th>Employes.#IdDept</th>
+                                <th>Departements.IdDept</th>
+                                <th>Departements.NomDept</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>Alice</td>
+                                <td>101</td>
+                                <td>101</td>
+                                <td>Ventes</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>Bob</td>
+                                <td>102</td>
+                                <td>102</td>
+                                <td>Marketing</td>
+                            </tr>
+                            <!-- Plus de lignes si nécessaire -->
+                        </tbody>
+                    </table>
+                    <p class="mt-2 text-sm text-gray-600">
+                        Cette jointure combine les informations des employés avec les détails de leurs départements respectifs en se basant sur l'identifiant du département.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Opérateurs Algébriques -->
+            <section id="operateurs-algebre">
+                <h3 class="sub-section-title">3. Opérateurs Algébriques</h3>
+
+                <!-- Union -->
+                <h4 class="text-xl font-semibold text-gray-700 mb-2">a. Union (&#8746;)</h4>
+                <p class="mb-4">
+                    L'union combine deux relations ayant les mêmes attributs et élimine les doublons.
+                </p>
+                <h5 class="font-bold text-gray-800 mb-2">Notation :</h5>
+                <div class="code-block">
+                    <pre class="font-mono text-sm">R &#8746; S</pre>
+                </div>
+                <button class="example-toggle" data-target="union-example">Exemple</button>
+                <div id="union-example" class="hidden-content">
+                    <p class="font-semibold mb-2">Exemple :</p>
+                    <p class="mb-2">
+                        Si R et S sont deux relations contenant des employés, alors R &#8746; S renvoie une relation avec tous les employés des deux tables, sans doublons.
+                    </p>
+                    <p class="font-semibold mt-4 mb-2">Table R (Employes_Marketing) :</p>
+                    <table class="result-table">
+                        <thead>
+                            <tr><th>Nom</th><th>Département</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Jean</td><td>Marketing</td></tr>
+                            <tr><td>Sophie</td><td>Marketing</td></tr>
+                        </tbody>
+                    </table>
+                    <p class="font-semibold mt-4 mb-2">Table S (Employes_Ventes) :</p>
+                    <table class="result-table">
+                        <thead>
+                            <tr><th>Nom</th><th>Département</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Jean</td><td>Marketing</td></tr>
+                            <tr><td>Paul</td><td>Ventes</td></tr>
+                        </tbody>
+                    </table>
+                    <p class="font-semibold mt-4 mb-2">Résultat de la requête (R &#8746; S) :</p>
+                    <table class="result-table">
+                        <thead>
+                            <tr><th>Nom</th><th>Département</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Jean</td><td>Marketing</td></tr>
+                            <tr><td>Sophie</td><td>Marketing</td></tr>
+                            <tr><td>Paul</td><td>Ventes</td></tr>
+                        </tbody>
+                    </table>
+                    <p class="mt-2 text-sm text-gray-600">
+                        L'opération d'union combine les employés des deux départements sans inclure de doublons.
+                    </p>
+                </div>
+
+                <!-- Intersection -->
+                <h4 class="text-xl font-semibold text-gray-700 mb-2">b. Intersection (&#8745;)</h4>
+                <p class="mb-4">
+                    L'intersection retourne les éléments communs aux deux relations.
+                </p>
+                <h5 class="font-bold text-gray-800 mb-2">Notation :</h5>
+                <div class="code-block">
+                    <pre class="font-mono text-sm">R &#8745; S</pre>
+                </div>
+                <button class="example-toggle" data-target="intersection-example">Exemple</button>
+                <div id="intersection-example" class="hidden-content">
+                    <p class="font-semibold mb-2">Exemple :</p>
+                    <p class="mb-2">
+                        Si R et S contiennent des employés, R &#8745; S renverra les employés présents dans les deux relations.
+                    </p>
+                    <p class="font-semibold mt-4 mb-2">Table R (Employes_ProjetA) :</p>
+                    <table class="result-table">
+                        <thead>
+                            <tr><th>Nom</th><th>Projet</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Alice</td><td>Projet A</td></tr>
+                            <tr><td>Bob</td><td>Projet A</td></tr>
+                        </tbody>
+                    </table>
+                    <p class="font-semibold mt-4 mb-2">Table S (Employes_ProjetB) :</p>
+                    <table class="result-table">
+                        <thead>
+                            <tr><th>Nom</th><th>Projet</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Bob</td><td>Projet B</td></tr>
+                            <tr><td>Charlie</td><td>Projet B</td></tr>
+                        </tbody>
+                    </table>
+                    <p class="font-semibold mt-4 mb-2">Résultat de la requête (R &#8745; S) :</p>
+                    <table class="result-table">
+                        <thead>
+                            <tr><th>Nom</th><th>Projet</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Bob</td><td>Projet A</td></tr>
+                        </tbody>
+                    </table>
+                    <p class="mt-2 text-sm text-gray-600">
+                        L'opération d'intersection identifie les employés qui participent aux deux projets.
+                    </p>
+                </div>
+
+                <!-- Différence -->
+                <h4 class="text-xl font-semibold text-gray-700 mb-2">c. Différence (-)</h4>
+                <p class="mb-4">
+                    La différence retourne les éléments qui sont dans la première relation mais pas dans la seconde.
+                </p>
+                <h5 class="font-bold text-gray-800 mb-2">Notation :</h5>
+                <div class="code-block">
+                    <pre class="font-mono text-sm">R - S</pre>
+                </div>
+                <button class="example-toggle" data-target="difference-example">Exemple</button>
+                <div id="difference-example" class="hidden-content">
+                    <p class="font-semibold mb-2">Exemple :</p>
+                    <p class="mb-2">
+                        Si R contient tous les employés et S contient les employés ayant un projet en cours, alors R - S renvoie les employés sans projet.
+                    </p>
+                    <p class="font-semibold mt-4 mb-2">Table R (Tous_Employes) :</p>
+                    <table class="result-table">
+                        <thead>
+                            <tr><th>Nom</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Alice</td></tr>
+                            <tr><td>Bob</td></tr>
+                            <tr><td>Charlie</td></tr>
+                        </tbody>
+                    </table>
+                    <p class="font-semibold mt-4 mb-2">Table S (Employes_Avec_Projet) :</p>
+                    <table class="result-table">
+                        <thead>
+                            <tr><th>Nom</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Alice</td></tr>
+                            <tr><td>Bob</td></tr>
+                        </tbody>
+                    </table>
+                    <p class="font-semibold mt-4 mb-2">Résultat de la requête (R - S) :</p>
+                    <table class="result-table">
+                        <thead>
+                            <tr><th>Nom</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Charlie</td></tr>
+                        </tbody>
+                    </table>
+                    <p class="mt-2 text-sm text-gray-600">
+                        L'opération de différence trouve les employés qui sont dans la première liste mais pas dans la seconde.
+                    </p>
+                </div>
+
+                <!-- Produit Cartésien -->
+                <h4 class="text-xl font-semibold text-gray-700 mb-2">d. Produit Cartésien (&#215;)</h4>
+                <p class="mb-4">
+                    Le produit cartésien combine chaque ligne de la première relation avec chaque ligne de la seconde, créant ainsi une relation plus large.
+                </p>
+                <h5 class="font-bold text-gray-800 mb-2">Notation :</h5>
+                <div class="code-block">
+                    <pre class="font-mono text-sm">R &#215; S</pre>
+                </div>
+                <button class="example-toggle" data-target="produit-cartesien-example">Exemple</button>
+                <div id="produit-cartesien-example" class="hidden-content">
+                    <p class="font-semibold mb-2">Exemple :</p>
+                    <p class="mb-2">
+                        Si R contient une liste d'employés et S une liste de projets, R &#215; S associera chaque employé à chaque projet.
+                    </p>
+                    <p class="font-semibold mt-4 mb-2">Table R (Employes) :</p>
+                    <table class="result-table">
+                        <thead>
+                            <tr><th>Nom</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Alice</td></tr>
+                            <tr><td>Bob</td></tr>
+                        </tbody>
+                    </table>
+                    <p class="font-semibold mt-4 mb-2">Table S (Projets) :</p>
+                    <table class="result-table">
+                        <thead>
+                            <tr><th>Projet</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Projet X</td></tr>
+                            <tr><td>Projet Y</td></tr>
+                        </tbody>
+                    </table>
+                    <p class="font-semibold mt-4 mb-2">Résultat de la requête (R &#215; S) :</p>
+                    <table class="result-table">
+                        <thead>
+                            <tr><th>Nom</th><th>Projet</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Alice</td><td>Projet X</td></tr>
+                            <tr><td>Alice</td><td>Projet Y</td></tr>
+                            <tr><td>Bob</td><td>Projet X</td></tr>
+                            <tr><td>Bob</td><td>Projet Y</td></tr>
+                        </tbody>
+                    </table>
+                    <p class="mt-2 text-sm text-gray-600">
+                        Le produit cartésien génère toutes les combinaisons possibles entre les lignes des deux tables.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Opérations d'Agrégation -->
+            <section id="operations-agregation">
+                <h3 class="sub-section-title">4. Opérations d'Agrégation</h3>
+                <p class="mb-4">
+                    Les opérations d'agrégation permettent d'effectuer des calculs sur des ensembles de valeurs.
+                </p>
+
+                <!-- Somme -->
+                <h4 class="text-xl font-semibold text-gray-700 mb-2">a. Somme (SUM)</h4>
+                <p class="mb-4">
+                    Calcule la somme des valeurs d'une colonne.
+                </p>
+                <button class="example-toggle" data-target="sum-example">Exemple</button>
+                <div id="sum-example" class="hidden-content">
+                    <p class="font-semibold mb-2">Exemple :</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">SUM (Salaire) (Employes)</pre>
+                    </div>
+                    <p class="mb-2">
+                        Calcule la somme des salaires de tous les employés.
+                    </p>
+                    <p class="font-semibold mt-4 mb-2">Table Employes :</p>
+                    <table class="result-table">
+                        <thead>
+                            <tr><th>Nom</th><th>Salaire</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Alice</td><td>3000</td></tr>
+                            <tr><td>Bob</td><td>2500</td></tr>
+                            <tr><td>Charlie</td><td>4000</td></tr>
+                        </tbody>
+                    </table>
+                    <p class="font-semibold mt-4 mb-2">Résultat de la requête (SUM) :</p>
+                    <table class="result-table">
+                        <thead>
+                            <tr><th>Somme Salaire</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>9500</td></tr>
+                        </tbody>
+                    </table>
+                    <p class="mt-2 text-sm text-gray-600">
+                        La somme de tous les salaires est calculée.
+                    </p>
+                </div>
+
+                <!-- Moyenne -->
+                <h4 class="text-xl font-semibold text-gray-700 mb-2">b. Moyenne (AVG)</h4>
+                <p class="mb-4">
+                    Calcule la moyenne des valeurs d'une colonne.
+                </p>
+                <button class="example-toggle" data-target="avg-example">Exemple</button>
+                <div id="avg-example" class="hidden-content">
+                    <p class="font-semibold mb-2">Exemple :</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">AVG (Salaire) (Employes)</pre>
+                    </div>
+                    <p class="mb-2">
+                        Retourne le salaire moyen des employés.
+                    </p>
+                    <p class="font-semibold mt-4 mb-2">Table Employes (même que ci-dessus) :</p>
+                    <p class="font-semibold mt-4 mb-2">Résultat de la requête (AVG) :</p>
+                    <table class="result-table">
+                        <thead>
+                            <tr><th>Moyenne Salaire</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>3166.67</td></tr>
+                        </tbody>
+                    </table>
+                    <p class="mt-2 text-sm text-gray-600">
+                        Le salaire moyen des employés est calculé.
+                    </p>
+                </div>
+
+                <!-- Minimum -->
+                <h4 class="text-xl font-semibold text-gray-700 mb-2">c. Minimum (MIN)</h4>
+                <p class="mb-4">
+                    Retourne la plus petite valeur d'une colonne.
+                </p>
+                <button class="example-toggle" data-target="min-example">Exemple</button>
+                <div id="min-example" class="hidden-content">
+                    <p class="font-semibold mb-2">Exemple :</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">MIN (Salaire) (Employes)</pre>
+                    </div>
+                    <p class="mb-2">
+                        Renvoie le salaire le plus bas parmi les employés.
+                    </p>
+                    <p class="font-semibold mt-4 mb-2">Table Employes (même que ci-dessus) :</p>
+                    <p class="font-semibold mt-4 mb-2">Résultat de la requête (MIN) :</p>
+                    <table class="result-table">
+                        <thead>
+                            <tr><th>Salaire Minimum</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>2500</td></tr>
+                        </tbody>
+                    </table>
+                    <p class="mt-2 text-sm text-gray-600">
+                        Le salaire le plus bas de la table est retourné.
+                    </p>
+                </div>
+
+                <!-- Maximum -->
+                <h4 class="text-xl font-semibold text-gray-700 mb-2">d. Maximum (MAX)</h4>
+                <p class="mb-4">
+                    Retourne la plus grande valeur d'une colonne.
+                </p>
+                <button class="example-toggle" data-target="max-example">Exemple</button>
+                <div id="max-example" class="hidden-content">
+                    <p class="font-semibold mb-2">Exemple :</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">MAX (Salaire) (Employes)</pre>
+                    </div>
+                    <p class="mb-2">
+                        Renvoie le salaire le plus élevé parmi les employés.
+                    </p>
+                    <p class="font-semibold mt-4 mb-2">Table Employes (même que ci-dessus) :</p>
+                    <p class="font-semibold mt-4 mb-2">Résultat de la requête (MAX) :</p>
+                    <table class="result-table">
+                        <thead>
+                            <tr><th>Salaire Maximum</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>4000</td></tr>
+                        </tbody>
+                    </table>
+                    <p class="mt-2 text-sm text-gray-600">
+                        Le salaire le plus élevé de la table est retourné.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Exercice Algèbre Relationnelle -->
+            <section id="exercice-algebre" class="mt-8">
+                <h3 class="sub-section-title">Exercice d'application : Algèbre Relationnelle</h3>
+                <p class="mb-4">Considérons le schéma relationnel suivant :</p>
+                <div class="code-block">
+                    <pre class="font-mono text-sm">Employé(ID_Employé, Nom, Prénom, Salaire, #ID_Departement)
+Departement(ID_Departement, Nom_Departement, Ville)</pre>
+                </div>
+                <p class="font-semibold mt-4 mb-2">Table : Employé</p>
+                <table class="result-table">
+                    <thead>
+                        <tr><th>ID_Employé</th><th>Nom</th><th>Prénom</th><th>Salaire</th><th>ID_Departement</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>1</td><td>Dupont</td><td>Alice</td><td>3000</td><td>10</td></tr>
+                        <tr><td>2</td><td>Martin</td><td>Bob</td><td>2500</td><td>20</td></tr>
+                        <tr><td>3</td><td>Durand</td><td>Clara</td><td>4000</td><td>10</td></tr>
+                        <tr><td>4</td><td>Dubois</td><td>David</td><td>2800</td><td>30</td></tr>
+                        <tr><td>5</td><td>Leroy</td><td>Emma</td><td>5000</td><td>20</td></tr>
+                    </tbody>
+                </table>
+                <p class="font-semibold mt-4 mb-2">Table : Département</p>
+                <table class="result-table">
+                    <thead>
+                        <tr><th>ID_Departement</th><th>Nom_Departement</th><th>Ville</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>10</td><td>Informatique</td><td>Paris</td></tr>
+                        <tr><td>20</td><td>RH</td><td>Lyon</td></tr>
+                        <tr><td>30</td><td>Finance</td><td>Marseille</td></tr>
+                    </tbody>
+                </table>
+
+                <ol class="list-decimal list-inside mt-6 mb-4">
+                    <li>Trouver tous les employés qui ont un salaire supérieur à 3000 €.</li>
+                    <li>Afficher uniquement les noms et salaires des employés.</li>
+                    <li>Afficher les noms des employés avec le nom de leur département.</li>
+                    <li>Trouver les employés travaillant à Lyon.</li>
+                    <li>Calculer le salaire moyen des employés du département Informatique.</li>
+                    <li>Trouver les employés qui ne travaillent pas dans le département "RH".</li>
+                </ol>
+
+                <button class="application-toggle" data-target="exercice-algebre-correction">Correction</button>
+                <div id="exercice-algebre-correction" class="hidden-content">
+                    <h4 class="text-xl font-semibold text-gray-700 mb-2">Correction :</h4>
+                    
+                    <p class="font-semibold mt-4 mb-2">1. Sélection: Employés avec Salaire > 3000 €</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">&#963;<sub>Salaire > 3000</sub>(Employé)</pre>
+                    </div>
+                    <table class="result-table">
+                        <thead>
+                            <tr><th>ID_Employé</th><th>Nom</th><th>Prénom</th><th>Salaire</th><th>ID_Departement</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>3</td><td>Durand</td><td>Clara</td><td>4000</td><td>10</td></tr>
+                            <tr><td>5</td><td>Leroy</td><td>Emma</td><td>5000</td><td>20</td></tr>
+                        </tbody>
+                    </table>
+
+                    <p class="font-semibold mt-4 mb-2">2. Projection: Noms et Salaires des employés</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">&#960;<sub>Nom, Salaire</sub>(Employé)</pre>
+                    </div>
+                    <table class="result-table">
+                        <thead>
+                            <tr><th>Nom</th><th>Salaire</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Dupont</td><td>3000</td></tr>
+                            <tr><td>Martin</td><td>2500</td></tr>
+                            <tr><td>Durand</td><td>4000</td></tr>
+                            <tr><td>Dubois</td><td>2800</td></tr>
+                            <tr><td>Leroy</td><td>5000</td></tr>
+                        </tbody>
+                    </table>
+
+                    <p class="font-semibold mt-4 mb-2">3. Jointure: Noms des employés avec le nom de leur département</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">Employé ⋈<sub>Employé.ID\_Departement = Departement.ID\_Departement</sub> Departement</pre>
+                    </div>
+                    <table class="result-table">
+                        <thead>
+                            <tr><th>Nom</th><th>Nom_Departement</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Dupont</td><td>Informatique</td></tr>
+                            <tr><td>Martin</td><td>RH</td></tr>
+                            <tr><td>Durand</td><td>Informatique</td></tr>
+                            <tr><td>Dubois</td><td>Finance</td></tr>
+                            <tr><td>Leroy</td><td>RH</td></tr>
+                        </tbody>
+                    </table>
+
+                    <p class="font-semibold mt-4 mb-2">4. Filtrage avec jointure: Employés travaillant à Lyon</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">&#960;<sub>Nom, Prénom</sub>(&#963;<sub>Ville = 'Lyon'</sub>(Employé ⋈ Departement))</pre>
+                    </div>
+                    <table class="result-table">
+                        <thead>
+                            <tr><th>Nom</th><th>Prénom</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Martin</td><td>Bob</td></tr>
+                            <tr><td>Leroy</td><td>Emma</td></tr>
+                        </tbody>
+                    </table>
+
+                    <p class="font-semibold mt-4 mb-2">5. Agrégation: Salaire moyen des employés du département Informatique</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">AVG(Salaire)(&#963;<sub>Nom\_Departement = 'Informatique'</sub>(Employé ⋈ Departement))</pre>
+                    </div>
+                    <table class="result-table">
+                        <thead>
+                            <tr><th>Moyenne Salaire</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>3500</td></tr>
+                        </tbody>
+                    </table>
+
+                    <p class="font-semibold mt-4 mb-2">6. Différence: Employés ne travaillant pas dans le département "RH"</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">&#960;<sub>ID\_Employé</sub>(Employé) - &#960;<sub>ID\_Employé</sub>(&#963;<sub>Nom\_Departement = 'RH'</sub>(Employé ⋈ Departement))</pre>
+                    </div>
+                    <table class="result-table">
+                        <thead>
+                            <tr><th>ID_Employé</th><th>Nom</th><th>Prénom</th><th>Salaire</th><th>ID_Departement</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>1</td><td>Dupont</td><td>Alice</td><td>3000</td><td>10</td></tr>
+                            <tr><td>3</td><td>Durand</td><td>Clara</td><td>4000</td><td>10</td></tr>
+                            <tr><td>4</td><td>Dubois</td><td>David</td><td>2800</td><td>30</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </section>
+
+        <!-- Partie II: Langage SQL -->
+        <section id="partie-ii">
+            <h2 class="part-title">Partie II: Langage SQL</h2>
+
+            <!-- Introduction au Langage SQL -->
+            <section id="introduction-sql">
+                <h3 class="sub-section-title">1. Introduction au Langage SQL</h3>
+                <p class="mb-4">
+                    SQL (Structured Query Language) est un langage informatique normalisé servant à exploiter des bases de données relationnelles. Il se divise en plusieurs catégories : le langage de définition des données (DDL), le langage de manipulation des données (DML) et le langage de contrôle des données (DCL).
+                </p>
+                <p class="mb-4">
+                    Les instructions de manipulation des métadonnées (structure de la base) commencent avec les mots clés <code class="font-mono text-sm">CREATE</code>, <code class="font-mono text-sm">ALTER</code> ou <code class="font-mono text-sm">DROP</code>. Les instructions de manipulation du contenu de la base de données commencent par les mots clés <code class="font-mono text-sm">SELECT</code>, <code class="font-mono text-sm">UPDATE</code>, <code class="font-mono text-sm">INSERT</code> ou <code class="font-mono text-sm">DELETE</code>. Enfin, <code class="font-mono text-sm">GRANT</code> et <code class="font-mono text-sm">REVOKE</code> sont utilisés pour les autorisations.
+                </p>
+                <h4 class="text-xl font-semibold text-gray-700 mb-2">Quelques règles d'écritures en SQL :</h4>
+                <ul class="list-disc list-inside mb-4">
+                    <li>Un nom d'objet (table, colonne, etc.) ne doit pas dépasser 128 caractères, commencer par une lettre, et être composé de lettres, chiffres ou tirets bas (_).</li>
+                    <li>Ne pas être un mot réservé en SQL.</li>
+                    <li>Pas de caractères accentués.</li>
+                    <li>Les noms d'objets sont insensibles à la casse.</li>
+                    <li>SQL ne fait pas la différence entre les minuscules et les majuscules.</li>
+                    <li>Les commentaires de code sont entre double tirets (<code class="font-mono text-sm">--</code>).</li>
+                    <li>Ne pas oublier le point-virgule (<code class="font-mono text-sm">;</code>) à la fin de chaque instruction pour déclencher son exécution.</li>
+                </ul>
+                <h4 class="text-xl font-semibold text-gray-700 mb-2">Types de données Oracle :</h4>
+                <table class="result-table">
+                    <thead>
+                        <tr><th>Type</th><th>Syntaxe</th><th>Description</th><th>Limites</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Chaînes de caractères</td><td>CHAR</td><td>Un seul caractère</td><td></td></tr>
+                        <tr><td></td><td>CHAR(n)</td><td>Chaîne de longueur fixe n (complétés par des espaces)</td><td>0 &#8804; n &#8804; 2000</td></tr>
+                        <tr><td></td><td>VARCHAR2(n)</td><td>Chaîne de longueur variable &#8804; n (taille ajustée au contenu)</td><td>0 &#8804; n &#8804; 4000</td></tr>
+                        <tr><td>Nombres</td><td>NUMBER(p)</td><td>Entier à p chiffres décimaux</td><td>1 &#8804; p &#8804; 38</td></tr>
+                        <tr><td></td><td>NUMBER (p,s)</td><td>Nombre réel à virgule fixe à p chiffres décalés de s chiffres après la virgule</td><td>-84 &#8804; s &#8804; 127</td></tr>
+                        <tr><td></td><td>NUMBER</td><td>Nombre réel à virgule flottante avec environ 16 chiffres significatifs</td><td></td></tr>
+                        <tr><td>Date et heure</td><td>DATE</td><td>Stockée sous forme Century Year Month Day Hour Minute Second</td><td></td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- SQL langage de contrôle des données (DCL) -->
+            <section id="sql-dcl">
+                <h3 class="sub-section-title">1. SQL langage de contrôle des données (DCL)</h3>
+                <p class="mb-4">
+                    Le DCL gère la sécurité et la cohérence de la base de données en contrôlant l'accès aux informations. Il inclut la gestion des utilisateurs, des privilèges (système et objet) et des rôles.
+                </p>
+
+                <h4 class="text-xl font-semibold text-gray-700 mb-2">a. La gestion des utilisateurs</h4>
+                <p class="mb-4">
+                    Un utilisateur est identifié par son nom et un mot de passe et doit posséder des privilèges pour se connecter et accéder aux objets de la base.
+                </p>
+                <p class="font-bold text-gray-800 mb-2">Création d'un utilisateur :</p>
+                <div class="code-block">
+                    <pre class="font-mono text-sm">CREATE USER &lt;nom_id&gt; IDENTIFIED BY &lt;password&gt;;</pre>
+                </div>
+                <button class="example-toggle" data-target="create-user-example">Exemple</button>
+                <div id="create-user-example" class="hidden-content">
+                    <p class="font-semibold mb-2">Exemple : Créer un utilisateur 'mon_utilisateur' avec le mot de passe 'password123'.</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">CREATE USER mon_utilisateur IDENTIFIED BY password123;</pre>
+                    </div>
+                    <p class="mt-2 text-sm text-gray-600">
+                        Cette commande crée un nouvel utilisateur dans la base de données Oracle. Notez qu'après la création, l'utilisateur n'a aucun privilège par défaut.
+                    </p>
+                </div>
+
+                <p class="font-bold text-gray-800 mb-2">Modification de mot de passe :</p>
+                <div class="code-block">
+                    <pre class="font-mono text-sm">ALTER USER &lt;nom_id&gt; IDENTIFIED BY &lt;new_password&gt; REPLACE &lt;old_password&gt;;</pre>
+                </div>
+                <button class="example-toggle" data-target="alter-user-example">Exemple</button>
+                <div id="alter-user-example" class="hidden-content">
+                    <p class="font-semibold mb-2">Exemple : Modifier le mot de passe de 'mon_utilisateur' de 'password123' à 'new_password456'.</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">ALTER USER mon_utilisateur IDENTIFIED BY new_password456 REPLACE password123;</pre>
+                    </div>
+                    <p class="mt-2 text-sm text-gray-600">
+                        Cette commande modifie le mot de passe de l'utilisateur spécifié.
+                    </p>
+                </div>
+
+                <p class="font-bold text-gray-800 mb-2">Suppression d'un utilisateur :</p>
+                <div class="code-block">
+                    <pre class="font-mono text-sm">DROP USER &lt;nom_id&gt; [CASCADE];</pre>
+                </div>
+                <p class="mb-4">
+                    <code class="font-mono text-sm">CASCADE</code> supprime également tous les objets appartenant à l'utilisateur.
+                </p>
+                <button class="example-toggle" data-target="drop-user-example">Exemple</button>
+                <div id="drop-user-example" class="hidden-content">
+                    <p class="font-semibold mb-2">Exemple : Supprimer l'utilisateur 'mon_utilisateur' et tous ses objets.</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">DROP USER mon_utilisateur CASCADE;</pre>
+                    </div>
+                    <p class="mt-2 text-sm text-gray-600">
+                        Cette commande supprime l'utilisateur et toutes ses tables, vues, etc.
+                    </p>
+                </div>
+
+                <h4 class="text-xl font-semibold text-gray-700 mb-2">b. La gestion des privilèges</h4>
+                <p class="mb-4">
+                    Un privilège est un droit d'exécuter une instruction SQL (privilège système) ou d'accéder à un objet (privilège objet).
+                </p>
+                <p class="font-bold text-gray-800 mb-2">Privilèges systèmes :</p>
+                <div class="code-block">
+                    <pre class="font-mono text-sm">GRANT privilègesystème | ALL PRIVILEGES TO utilisateur | public [IDENTIFIED BY mot_passe] [WITH ADMIN OPTION];</pre>
+                </div>
+                <ul class="list-disc list-inside mb-4">
+                    <li><code class="font-mono text-sm">ALL PRIVILEGES</code>: tous les privilèges système.</li>
+                    <li><code class="font-mono text-sm">PUBLIC</code>: attribue le privilège à tous les utilisateurs.</li>
+                    <li><code class="font-mono text-sm">WITH ADMIN OPTION</code>: permet au bénéficiaire de transmettre les privilèges.</li>
+                </ul>
+                <button class="example-toggle" data-target="grant-system-example">Exemple</button>
+                <div id="grant-system-example" class="hidden-content">
+                    <p class="font-semibold mb-2">Exemple : Accorder le droit de connexion et de création de tables à 'Hicham'.</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">GRANT CREATE SESSION, CREATE TABLE TO Hicham;</pre>
+                    </div>
+                    <p class="mt-2 text-sm text-gray-600">
+                        Hicham peut désormais se connecter à la base et créer des tables dans son schéma.
+                    </p>
+                    <p class="font-semibold mt-4 mb-2">Exemple : Accorder le droit de créer des tables à 'Hicham' avec la possibilité de transmettre ce privilège.</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">GRANT CREATE TABLE TO Hicham WITH ADMIN OPTION;</pre>
+                    </div>
+                    <p class="mt-2 text-sm text-gray-600">
+                        Hicham peut créer des tables et également accorder ce privilège à d'autres utilisateurs.
+                    </p>
+                </div>
+
+                <p class="font-bold text-gray-800 mb-2">Retrait de privilège système :</p>
+                <div class="code-block">
+                    <pre class="font-mono text-sm">REVOKE privilègesystème | ALL PRIVILEGES FROM utilisateur | PUBLIC;</pre>
+                </div>
+                <button class="example-toggle" data-target="revoke-system-example">Exemple</button>
+                <div id="revoke-system-example" class="hidden-content">
+                    <p class="font-semibold mb-2">Exemple : Retirer le droit de connexion à 'Hicham' et 'Ahmed'.</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">REVOKE CREATE SESSION FROM Hicham, Ahmed;</pre>
+                    </div>
+                    <p class="mt-2 text-sm text-gray-600">
+                        Hicham et Ahmed ne peuvent plus se connecter à la base de données.
+                    </p>
+                </div>
+
+                <p class="font-bold text-gray-800 mb-2">Privilèges objets :</p>
+                <p class="mb-4">
+                    Ces privilèges sont relatifs aux données et aux actions sur des objets spécifiques (table, vue, séquence, procédure).
+                </p>
+                <table class="result-table">
+                    <thead>
+                        <tr><th>Privilège</th><th>table</th><th>vue</th><th>séquence</th><th>programme PL/SQL</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>ALTER</td><td></td><td></td><td>X</td><td></td></tr>
+                        <tr><td>DELETE</td><td>X</td><td>X</td><td></td><td></td></tr>
+                        <tr><td>EXECUTE</td><td></td><td></td><td></td><td>X</td></tr>
+                        <tr><td>INDEX</td><td>X</td><td></td><td></td><td></td></tr>
+                        <tr><td>INSERT</td><td>X</td><td>X</td><td></td><td></td></tr>
+                        <tr><td>REFERENCES</td><td>X</td><td></td><td></td><td></td></tr>
+                        <tr><td>SELECT</td><td>X</td><td></td><td>X</td><td></td></tr>
+                        <tr><td>UPDATE</td><td>X</td><td>X</td><td></td><td></td></tr>
+                    </tbody>
+                </table>
+                <p class="font-bold text-gray-800 mb-2 mt-4">Attribution de privilèges objets :</p>
+                <div class="code-block">
+                    <pre class="font-mono text-sm">GRANT privilègeobjet | ALL PRIVILEGES [(colonne 1, colonne 2)] ON SCHEMA.nomobjet TO utilisateur | PUBLIC [WITH GRANT OPTION];</pre>
+                </div>
+                <button class="example-toggle" data-target="grant-object-example">Exemple</button>
+                <div id="grant-object-example" class="hidden-content">
+                    <p class="font-semibold mb-2">Exemple : Accorder les droits de lecture, insertion, modification et suppression sur la table ETUDIANTS du schéma SMI à 'utilisateur1'.</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">GRANT SELECT, INSERT, UPDATE, DELETE ON SMI.ETUDIANTS TO utilisateur1;</pre>
+                    </div>
+                    <p class="mt-2 text-sm text-gray-600">
+                        L'utilisateur1 peut effectuer toutes les opérations de manipulation de données sur la table ETUDIANTS.
+                    </p>
+                    <p class="font-semibold mt-4 mb-2">Exemple : Accorder le droit de modifier uniquement les colonnes 'note' et 'moy' de la table ETUDIANTS du schéma SMI à 'utilisateur1'.</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">GRANT UPDATE (note, moy) ON SMI.ETUDIANTS TO utilisateur1;</pre>
+                    </div>
+                    <p class="mt-2 text-sm text-gray-600">
+                        L'utilisateur1 est restreint à modifier uniquement les colonnes spécifiées.
+                    </p>
+                </div>
+
+                <p class="font-bold text-gray-800 mb-2">Retrait de privilège objet :</p>
+                <div class="code-block">
+                    <pre class="font-mono text-sm">REVOKE [GRANT OPTION FOR] Priv1, Priv2 ... ON objet FROM utilisateur, utilisateur2... | PUBLIC [RESTRICT | CASCADE];</pre>
+                </div>
+                <ul class="list-disc list-inside mb-4">
+                    <li><code class="font-mono text-sm">GRANT OPTION FOR</code>: retrait uniquement du droit de transfert.</li>
+                    <li><code class="font-mono text-sm">CASCADE</code>: retrait des droits accordés à des tiers par le bénéficiaire.</li>
+                    <li><code class="font-mono text-sm">RESTRICT</code>: refuse le retrait en cascade.</li>
+                </ul>
+                <button class="example-toggle" data-target="revoke-object-example">Exemple</button>
+                <div id="revoke-object-example" class="hidden-content">
+                    <p class="font-semibold mb-2">Exemple : Retirer les droits de modification (nom, age) et de lecture sur la table Pilote de 'Hicham' à 'Ahmed'.</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">REVOKE UPDATE(nom, age), SELECT ON Hicham.Pilote FROM Ahmed;</pre>
+                    </div>
+                    <p class="mt-2 text-sm text-gray-600">
+                        Ahmed ne peut plus lire ni modifier la table Pilote.
+                    </p>
+                </div>
+
+                <h4 class="text-xl font-semibold text-gray-700 mb-2">c. La gestion des rôles</h4>
+                <p class="mb-4">
+                    Un rôle est un regroupement de privilèges (système ou objet) qui peut être accordé à un ou plusieurs utilisateurs. Cela facilite la gestion des privilèges.
+                </p>
+                <p class="font-bold text-gray-800 mb-2">Création/suppression de rôles :</p>
+                <div class="code-block">
+                    <pre class="font-mono text-sm">CREATE ROLE nom_role;</pre>
+                    <pre class="font-mono text-sm">DROP ROLE nom_role;</pre>
+                </div>
+                <button class="example-toggle" data-target="create-drop-role-example">Exemple</button>
+                <div id="create-drop-role-example" class="hidden-content">
+                    <p class="font-semibold mb-2">Exemple : Créer un rôle 'comptabilite'.</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">CREATE ROLE comptabilite;</pre>
+                    </div>
+                    <p class="mt-2 text-sm text-gray-600">
+                        Un nouveau rôle 'comptabilite' est créé.
+                    </p>
+                </div>
+
+                <p class="font-bold text-gray-800 mb-2">Association d'un rôle à un utilisateur :</p>
+                <div class="code-block">
+                    <pre class="font-mono text-sm">GRANT nom_role TO utilisateur;</pre>
+                </div>
+                <button class="example-toggle" data-target="grant-role-user-example">Exemple</button>
+                <div id="grant-role-user-example" class="hidden-content">
+                    <p class="font-semibold mb-2">Exemple : Accorder le rôle 'comptabilite' à 'utilisateur_compta'.</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">GRANT comptabilite TO utilisateur_compta;</pre>
+                    </div>
+                    <p class="mt-2 text-sm text-gray-600">
+                        L'utilisateur 'utilisateur_compta' hérite de tous les privilèges définis pour le rôle 'comptabilite'.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Exercice SQL DCL -->
+            <section id="exercice-sql-dcl" class="mt-8">
+                <h3 class="sub-section-title">Exercice d'application : SQL (DCL)</h3>
+                <p class="mb-4">Une entreprise utilise une base de données Oracle pour gérer ses employés. On a deux utilisateurs :</p>
+                <ul class="list-disc list-inside mb-4">
+                    <li><code class="font-mono text-sm">admin_hr</code>: Responsable des ressources humaines, il doit gérer les employés.</li>
+                    <li><code class="font-mono text-sm">user_hr</code>: Un employé standard qui peut consulter les informations mais ne doit pas les modifier.</li>
+                </ul>
+                <p class="mb-4">L'entreprise possède une table <code class="font-mono text-sm">employes</code> contenant les informations des employés.</p>
+                <p class="font-semibold">Objectifs de l'exercice :</p>
+                <ol class="list-decimal list-inside mb-4">
+                    <li>Créer les utilisateurs <code class="font-mono text-sm">admin_hr</code> et <code class="font-mono text-sm">user_hr</code>.</li>
+                    <li>Attribuer les privilèges appropriés.</li>
+                    <li>Tester l'accès aux données.</li>
+                </ol>
+
+                <button class="application-toggle" data-target="exercice-sql-dcl-correction">Correction</button>
+                <div id="exercice-sql-dcl-correction" class="hidden-content">
+                    <h4 class="text-xl font-semibold text-gray-700 mb-2">Correction :</h4>
+                    <p class="font-semibold mt-4 mb-2">1. Création des utilisateurs :</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">CREATE USER admin_hr IDENTIFIED BY admin_password;
+CREATE USER user_hr IDENTIFIED BY user_password;</pre>
+                    </div>
+                    <p class="mt-2 text-sm text-gray-600">
+                        Ces commandes créent les deux utilisateurs avec leurs mots de passe respectifs.
+                    </p>
+
+                    <p class="font-semibold mt-4 mb-2">2. Attribution des privilèges :</p>
+                    <p class="mb-2">Pour <code class="font-mono text-sm">admin_hr</code> (gestion complète de la table <code class="font-mono text-sm">employes</code>) :</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">GRANT CREATE SESSION TO admin_hr;
+GRANT SELECT, INSERT, UPDATE, DELETE ON votre_schema.employes TO admin_hr;</pre>
+                    </div>
+                    <p class="mb-2">Pour <code class="font-mono text-sm">user_hr</code> (lecture seule de la table <code class="font-mono text-sm">employes</code>) :</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">GRANT CREATE SESSION TO user_hr;
+GRANT SELECT ON votre_schema.employes TO user_hr;</pre>
+                    </div>
+                    <p class="mt-2 text-sm text-gray-600">
+                        Les privilèges nécessaires sont accordés à chaque utilisateur en fonction de son rôle. Remplacez <code class="font-mono text-sm">votre_schema</code> par le nom du schéma où se trouve la table <code class="font-mono text-sm">employes</code>.
+                    </p>
+
+                    <p class="font-semibold mt-4 mb-2">3. Test de l'accès aux données :</p>
+                    <p class="mb-2">Se connecter en tant que <code class="font-mono text-sm">admin_hr</code> et essayer d'insérer des données :</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">CONNECT admin_hr/admin_password;
+INSERT INTO votre_schema.employes (id, nom) VALUES (1, 'Nouveau Employe');</pre>
+                    </div>
+                    <p class="mb-2">Se connecter en tant que <code class="font-mono text-sm">user_hr</code> et essayer de lire les données :</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">CONNECT user_hr/user_password;
+SELECT * FROM votre_schema.employes;
+-- Essayer d'insérer (devrait échouer) :
+-- INSERT INTO votre_schema.employes (id, nom) VALUES (2, 'Autre Employe');</pre>
+                    </div>
+                    <p class="mt-2 text-sm text-gray-600">
+                        Ces étapes permettent de vérifier que les privilèges ont été correctement appliqués.
+                    </p>
+                </div>
+            </section>
+            
+            <!-- SQL langage de définition de données (DDL) -->
+            <section id="sql-ddl">
+                <h3 class="sub-section-title">2. SQL langage de définition de données (DDL)</h3>
+                <p class="mb-4">
+                    Le DDL permet de créer, modifier et supprimer la structure des objets de la base de données (tables, vues, index).
+                </p>
+
+                <h4 class="text-xl font-semibold text-gray-700 mb-2">a. Création de table</h4>
+                <p class="mb-4">
+                    Pour créer une table, on utilise l'instruction <code class="font-mono text-sm">CREATE TABLE</code> en spécifiant le nom de la table, les noms des colonnes, leurs types de données et leurs contraintes.
+                </p>
+                <div class="code-block">
+                    <pre class="font-mono text-sm">CREATE TABLE &lt;nom de la table&gt; (
+    &lt;nom de colonne&gt; &lt;type&gt; &lt;contrainte&gt;,
+    &lt;nom de colonne&gt; &lt;type&gt; &lt;contrainte&gt;,
+    &lt;contrainte&gt;,
+    ...
+);</pre>
+                </div>
+                <button class="example-toggle" data-target="create-table-example">Exemple</button>
+                <div id="create-table-example" class="hidden-content">
+                    <p class="font-semibold mb-2">Exemple : Créer les tables CLIENT et COMMANDE.</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">CREATE TABLE Client (
+    NoClient Integer,
+    NomClient Varchar(25),
+    TypeClient VarChar(15)
+);
+
+CREATE TABLE Commande (
+    NoCommande Integer,
+    DateCommande Date,
+    DateLivraison Date,
+    NoClient Integer
+);</pre>
+                    </div>
+                    <p class="mt-2 text-sm text-gray-600">
+                        Ces commandes créent les structures des tables CLIENT et COMMANDE.
+                    </p>
+                </div>
+
+                <h4 class="text-xl font-semibold text-gray-700 mb-2">b. Définition des contraintes d'intégrité</h4>
+                <p class="mb-4">
+                    Les contraintes garantissent la cohérence des données. Les mots clés courants sont <code class="font-mono text-sm">NOT NULL</code>, <code class="font-mono text-sm">UNIQUE</code>, <code class="font-mono text-sm">CHECK</code>, <code class="font-mono text-sm">PRIMARY KEY</code>, <code class="font-mono text-sm">FOREIGN KEY</code> et <code class="font-mono text-sm">DEFAULT</code>.
+                </p>
+                <p class="font-bold text-gray-800 mb-2">Exemple de création de table avec contraintes :</p>
+                <div class="code-block">
+                    <pre class="font-mono text-sm">CREATE TABLE clients(
+    Nom char(30) NOT NULL,
+    Prenom char(30) NOT NULL,
+    Age integer CHECK (Age &lt; 100),
+    Email char(50) NOT NULL, CHECK (Email LIKE '%@%')
+);</pre>
+                </div>
+                <button class="example-toggle" data-target="create-table-constraints-example">Exemple</button>
+                <div id="create-table-constraints-example" class="hidden-content">
+                    <p class="font-semibold mb-2">Exemple : Créer la table Client avec des contraintes de clé primaire et de vérification.</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">CREATE TABLE Client (
+    NoClient Integer,
+    NomClient VARCHAR(25) NOT NULL,
+    TypeClient VARCHAR(15) NOT NULL,
+    CONSTRAINT PK_Client PRIMARY KEY (NoClient),
+    CONSTRAINT CK_Client CHECK (TypeClient = 'PARTICULIER ' OR TypeClient = 'PROFESSIONNEL ')
+);</pre>
+                    </div>
+                    <p class="mt-2 text-sm text-gray-600">
+                        Cette commande crée la table Client avec une clé primaire sur NoClient et une contrainte qui limite les valeurs de TypeClient à 'PARTICULIER' ou 'PROFESSIONNEL'.
+                    </p>
+                </div>
+
+                <p class="font-bold text-gray-800 mb-2">Règles à respecter pour garantir l'intégrité référentielle :</p>
+                <table class="result-table">
+                    <thead>
+                        <tr><th>Instruction</th><th>Table <<< parent >>>></th><th>Table << fils >>>></th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Insert</td><td>Correcte si la clé primaire est unique</td><td>Correcte si la clé étrangère est référencée dans la table père ou est nulle</td></tr>
+                        <tr><td>update</td><td>Correcte si l'instruction ne laisse pas d'enregistrements dans la table fils ayant une clé étrangère non référencée</td><td>Correcte si la nouvelle clé étrangère référence un enregistrement père existant</td></tr>
+                        <tr><td>delete</td><td>Correcte si aucun enregistrement de la table fils ne référence le ou les enregistrements détruits</td><td>Correcte sans condition</td></tr>
+                        <tr><td>Delete cascade</td><td>Correcte sans condition</td><td>Correcte sans condition</td></tr>
+                        <tr><td>Delete set null</td><td>Correcte sans condition</td><td>Correcte sans condition</td></tr>
+                    </tbody>
+                </table>
+                <p class="mt-2 text-sm text-gray-600">
+                    L'option <code class="font-mono text-sm">ON DELETE CASCADE</code> permet de supprimer une ligne d'une table ainsi que toutes les lignes liées dans une autre table.
+                </p>
+
+                <h4 class="text-xl font-semibold text-gray-700 mb-2">c. Modification de la structure d'une table</h4>
+                <p class="font-bold text-gray-800 mb-2">Ajout de colonnes ou contraintes :</p>
+                <div class="code-block">
+                    <pre class="font-mono text-sm">ALTER TABLE &lt;nom de la table&gt; ADD (&lt;nom de colonne&gt; &lt;type&gt;[, &lt;contrainte&gt;]...);</pre>
+                    <pre class="font-mono text-sm">ALTER TABLE &lt;nom de la table&gt; ADD (&lt;contrainte&gt;, &lt;contrainte&gt;...);</pre>
+                </div>
+                <button class="example-toggle" data-target="alter-table-add-example">Exemple</button>
+                <div id="alter-table-add-example" class="hidden-content">
+                    <p class="font-semibold mb-2">Exemple : Ajouter la colonne 'CodePostal' à la table 'Client'.</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">ALTER TABLE Client ADD (CodePostal VARCHAR(10));</pre>
+                    </div>
+                    <p class="mt-2 text-sm text-gray-600">
+                        Cette commande ajoute une nouvelle colonne à la table 'Client'.
+                    </p>
+                </div>
+                <p class="font-bold text-gray-800 mb-2">Modification de colonnes :</p>
+                <div class="code-block">
+                    <pre class="font-mono text-sm">ALTER TABLE &lt;nom de la table&gt; MODIFY ([&lt;nom de colonne&gt; &lt;nouveau type&gt;, &lt;nom de colonne&gt; &lt;nouveau type&gt;,...);</pre>
+                </div>
+                <button class="example-toggle" data-target="alter-table-modify-example">Exemple</button>
+                <div id="alter-table-modify-example" class="hidden-content">
+                    <p class="font-semibold mb-2">Exemple : Modifier le type de 'NomClient' dans la table 'Client'.</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">ALTER TABLE Client MODIFY (NomClient VARCHAR(50));</pre>
+                    </div>
+                    <p class="mt-2 text-sm text-gray-600">
+                        Cette commande modifie la taille maximale de la colonne 'NomClient'.
+                    </p>
+                </div>
+
+                <h4 class="text-xl font-semibold text-gray-700 mb-2">d. Consultation de la structure d'une base</h4>
+                <div class="code-block">
+                    <pre class="font-mono text-sm">DESCRIBE &lt;nom de la table&gt;;</pre>
+                </div>
+                <button class="example-toggle" data-target="describe-table-example">Exemple</button>
+                <div id="describe-table-example" class="hidden-content">
+                    <p class="font-semibold mb-2">Exemple : Décrire la structure de la table 'Client'.</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">DESCRIBE Client;</pre>
+                    </div>
+                    <p class="mt-2 text-sm text-gray-600">
+                        Cette commande affiche les détails de la structure de la table, y compris les noms des colonnes, leurs types et si elles sont nullables.
+                    </p>
+                </div>
+
+                <h4 class="text-xl font-semibold text-gray-700 mb-2">e. Destruction de table</h4>
+                <div class="code-block">
+                    <pre class="font-mono text-sm">DROP TABLE &lt;nom de la table&gt;;</pre>
+                </div>
+                <button class="example-toggle" data-target="drop-table-example">Exemple</button>
+                <div id="drop-table-example" class="hidden-content">
+                    <p class="font-semibold mb-2">Exemple : Supprimer la table 'Commande'.</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">DROP TABLE Commande;</pre>
+                    </div>
+                    <p class="mt-2 text-sm text-gray-600">
+                        Cette commande supprime la table 'Commande' de la base de données.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Exercice SQL DDL -->
+            <section id="exercice-sql-ddl" class="mt-8">
+                <h3 class="sub-section-title">Exercice d'application : SQL (DDL)</h3>
+                <ol class="list-decimal list-inside mt-6 mb-4">
+                    <li>Créer les trois tables du schéma relationnel suivant :
+                        <ul class="list-disc list-inside ml-4">
+                            <li>clients (Numéro client, Nom client, Prénom client, Date naissance)</li>
+                            <li>commandes (n° commande, Date commande, #Numéro client (non vide))</li>
+                            <li>articles (Numéro article, Désignation (unique), Prix unitaire de vente, couleur)</li>
+                        </ul>
+                    </li>
+                    <li>Modifier la table clients en ajoutant le code postal du client.</li>
+                    <li>Modifier la table articles en modifiant le prix unitaire de vente en ajoutant la condition de positivité.</li>
+                    <li>Supprimer les tables articles et clients.</li>
+                </ol>
+
+                <button class="application-toggle" data-target="exercice-sql-ddl-correction">Correction</button>
+                <div id="exercice-sql-ddl-correction" class="hidden-content">
+                    <h4 class="text-xl font-semibold text-gray-700 mb-2">Correction :</h4>
+
+                    <p class="font-semibold mt-4 mb-2">1. Création des tables :</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">CREATE TABLE clients (
+    NumeroClient INTEGER PRIMARY KEY,
+    NomClient VARCHAR(50) NOT NULL,
+    PrenomClient VARCHAR(50),
+    DateNaissance DATE
+);
+
+CREATE TABLE commandes (
+    NoCommande INTEGER PRIMARY KEY,
+    DateCommande DATE,
+    NumeroClient INTEGER NOT NULL,
+    CONSTRAINT FK_CommandeClient FOREIGN KEY (NumeroClient) REFERENCES clients(NumeroClient)
+);
+
+CREATE TABLE articles (
+    NumeroArticle INTEGER PRIMARY KEY,
+    Designation VARCHAR(100) UNIQUE NOT NULL,
+    PrixUnitaireVente NUMBER(10, 2),
+    Couleur VARCHAR(50)
+);</pre>
+                    </div>
+
+                    <p class="font-semibold mt-4 mb-2">2. Modifier la table clients en ajoutant le code postal :</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">ALTER TABLE clients ADD (CodePostal VARCHAR(10));</pre>
+                    </div>
+
+                    <p class="font-semibold mt-4 mb-2">3. Modifier la table articles en ajoutant la condition de positivité pour le prix :</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">ALTER TABLE articles ADD CONSTRAINT CK_PrixPositif CHECK (PrixUnitaireVente >= 0);</pre>
+                    </div>
+
+                    <p class="font-semibold mt-4 mb-2">4. Supprimer les tables articles et clients :</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">DROP TABLE articles;
+DROP TABLE commandes; -- Supprimer les commandes d'abord si elle référence clients
+DROP TABLE clients;</pre>
+                    </div>
+                    <p class="mt-2 text-sm text-gray-600">
+                        L'ordre de suppression est important pour les tables avec des clés étrangères. La table 'commandes' doit être supprimée avant 'clients' si elle référence 'clients'.
+                    </p>
+                </div>
+            </section>
+
+            <!-- SQL langage de manipulation de données (DML) -->
+            <section id="sql-dml">
+                <h3 class="sub-section-title">3. SQL langage de manipulation de données (DML)</h3>
+                <p class="mb-4">
+                    Le DML permet de manipuler les données dans les tables (insertion, modification, suppression et interrogation).
+                </p>
+
+                <h4 class="text-xl font-semibold text-gray-700 mb-2">a. Insertion de données (INSERT)</h4>
+                <p class="mb-4">
+                    Pour insérer une ou plusieurs lignes dans une table.
+                </p>
+                <div class="code-block">
+                    <pre class="font-mono text-sm">INSERT INTO &lt;nom de table&gt; (colonne, ...) VALUES (valeur, ...);</pre>
+                    <pre class="font-mono text-sm">INSERT INTO &lt;nom de table&gt; (colonne, ...) SELECT ...;</pre>
+                </div>
+                <button class="example-toggle" data-target="insert-example">Exemple</button>
+                <div id="insert-example" class="hidden-content">
+                    <p class="font-semibold mb-2">Exemple : Insérer un nouveau client dans la table 'clients'.</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">INSERT INTO clients (num_client, nom_client, prenom_client) VALUES (10, 'morabit', 'ahmed');</pre>
+                    </div>
+                    <p class="mt-2 text-sm text-gray-600">
+                        Cette commande ajoute une nouvelle ligne à la table 'clients'.
+                    </p>
+                    <p class="font-semibold mt-4 mb-2">Exemple : Insérer un client avec un numéro auto-incrémenté via une séquence.</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">CREATE SEQUENCE sq_clients
+MINVALUE 1
+MAXVALUE 99
+START WITH 1
+INCREMENT BY 1;
+
+INSERT INTO clients (Num, Nom, Prenom) VALUES (sq_clients.NEXTVAL, 'morabit', 'ahmed');</pre>
+                    </div>
+                    <p class="mt-2 text-sm text-gray-600">
+                        La séquence <code class="font-mono text-sm">sq_clients</code> est créée et utilisée pour générer automatiquement l'ID du client.
+                    </p>
+                </div>
+
+                <h4 class="text-xl font-semibold text-gray-700 mb-2">b. Modification de données (UPDATE)</h4>
+                <p class="mb-4">
+                    Pour modifier la valeur d'une ou plusieurs colonnes, d'une ou plusieurs lignes.
+                </p>
+                <div class="code-block">
+                    <pre class="font-mono text-sm">UPDATE &lt;nom de table&gt; SET colonne = valeur, ... [WHERE condition];</pre>
+                    <pre class="font-mono text-sm">UPDATE &lt;nom de table&gt; SET colonne = SELECT ...;</pre>
+                </div>
+                <button class="example-toggle" data-target="update-example">Exemple</button>
+                <div id="update-example" class="hidden-content">
+                    <p class="font-semibold mb-2">Exemple : Augmenter le prix unitaire des articles de 15.2449%.</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">UPDATE articles SET prix_unitaire=prix_unitaire*0.152449;</pre>
+                    </div>
+                    <p class="mt-2 text-sm text-gray-600">
+                        Cette commande met à jour le prix de tous les articles.
+                    </p>
+                    <p class="font-semibold mt-4 mb-2">Exemple : Doubler le prix unitaire des articles de couleur 'rouge'.</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">UPDATE articles SET prix_unitaire = prix_unitaire*2 WHERE couleur = 'rouge';</pre>
+                    </div>
+                    <p class="mt-2 text-sm text-gray-600">
+                        Cette commande cible uniquement les articles de couleur rouge.
+                    </p>
+                </div>
+
+                <h4 class="text-xl font-semibold text-gray-700 mb-2">c. Suppression de données (DELETE)</h4>
+                <p class="mb-4">
+                    Pour supprimer une ou plusieurs lignes dans une table.
+                </p>
+                <div class="code-block">
+                    <pre class="font-mono text-sm">DELETE FROM &lt;nom de table&gt; [WHERE condition];</pre>
+                </div>
+                <button class="example-toggle" data-target="delete-example">Exemple</button>
+                <div id="delete-example" class="hidden-content">
+                    <p class="font-semibold mb-2">Exemple : Supprimer tous les articles.</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">DELETE FROM articles;</pre>
+                    </div>
+                    <p class="mt-2 text-sm text-gray-600">
+                        Cette commande supprime toutes les lignes de la table 'articles'.
+                    </p>
+                    <p class="font-semibold mt-4 mb-2">Exemple : Supprimer les articles dont le prix est inférieur à 10.</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">DELETE FROM articles WHERE prix_unitaire &lt; 10;</pre>
+                    </div>
+                    <p class="mt-2 text-sm text-gray-600">
+                        Cette commande supprime les lignes spécifiques qui remplissent la condition.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Exercice SQL DML -->
+            <section id="exercice-sql-dml" class="mt-8">
+                <h3 class="sub-section-title">Exercice d'application : SQL (DML)</h3>
+                <p class="mb-4">Considérons les tables suivantes (créées précédemment) :</p>
+                <div class="code-block">
+                    <pre class="font-mono text-sm">Companie(comp, nrue, ville, nomCom)
+Pilote(brevet, nom, nbHVol, #comp)
+Avion(immat, typeAvion, nbhVol, #comp (not null))
+Affreter(#comp, #immat, dateAff, nbPas)</pre>
+                </div>
+                <ol class="list-decimal list-inside mt-6 mb-4">
+                    <li>Insérer dans la table Pilote les enregistrements suivants :
+                        <ul class="list-disc list-inside ml-4">
+                            <li>('PL_1', 'Paull', 1000, 'SING')</li>
+                            <li>('PL_2', 'inconnu', 0, 'NULL')</li>
+                            <li>('PL_3', 'Paul2', 0, '?')</li>
+                        </ul>
+                    </li>
+                    <li>Insérer dans la table Avion l'enregistrement suivant :
+                        <ul class="list-disc list-inside ml-4">
+                            <li>('F_WTSS', 'Concorde', 6570, 'SING')</li>
+                        </ul>
+                    </li>
+                    <li>Insérer dans la table Affreter l'enregistrement suivant :
+                        <ul class="list-disc list-inside ml-4">
+                            <li>('AF', 'F_WTSS', '15-05-2003', 82)</li>
+                        </ul>
+                    </li>
+                    <li>Modifier la table Pilote en remplaçant comp par 'TOTO' pour brevet = 'PL_1'.</li>
+                    <li>Modifier la table Pilote en remplaçant comp par 'SING' pour brevet = 'PL_2'.</li>
+                    <li>Modifier la table Pilote en remplaçant brevet par 'PL3bis' pour brevet = 'PL_1'.</li>
+                    <li>Supprimer les enregistrements de la table Avion.</li>
+                </ol>
+
+                <button class="application-toggle" data-target="exercice-sql-dml-correction">Correction</button>
+                <div id="exercice-sql-dml-correction" class="hidden-content">
+                    <h4 class="text-xl font-semibold text-gray-700 mb-2">Correction :</h4>
+
+                    <p class="font-semibold mt-4 mb-2">1. Insertion dans la table Pilote :</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">INSERT INTO Pilote (brevet, nom, nbHVol, comp) VALUES ('PL_1', 'Paull', 1000, 'SING');
+INSERT INTO Pilote (brevet, nom, nbHVol, comp) VALUES ('PL_2', 'inconnu', 0, NULL); -- Utiliser NULL pour une valeur nulle
+INSERT INTO Pilote (brevet, nom, nbHVol, comp) VALUES ('PL_3', 'Paul2', 0, '?');</pre>
+                    </div>
+
+                    <p class="font-semibold mt-4 mb-2">2. Insertion dans la table Avion :</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">INSERT INTO Avion (immat, typeAvion, nbhVol, comp) VALUES ('F_WTSS', 'Concorde', 6570, 'SING');</pre>
+                    </div>
+
+                    <p class="font-semibold mt-4 mb-2">3. Insertion dans la table Affreter :</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">INSERT INTO Affreter (comp, immat, dateAff, nbPas) VALUES ('AF', 'F_WTSS', TO_DATE('15-05-2003', 'DD-MM-YYYY'), 82);</pre>
+                    </div>
+
+                    <p class="font-semibold mt-4 mb-2">4. Modification de la table Pilote (comp='TOTO' pour brevet='PL_1') :</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">UPDATE Pilote SET comp = 'TOTO' WHERE brevet = 'PL_1';</pre>
+                    </div>
+
+                    <p class="font-semibold mt-4 mb-2">5. Modification de la table Pilote (comp='SING' pour brevet='PL_2') :</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">UPDATE Pilote SET comp = 'SING' WHERE brevet = 'PL_2';</pre>
+                    </div>
+
+                    <p class="font-semibold mt-4 mb-2">6. Modification de la table Pilote (brevet='PL3bis' pour brevet='PL_1') :</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">UPDATE Pilote SET brevet = 'PL3bis' WHERE brevet = 'PL_1';</pre>
+                    </div>
+
+                    <p class="font-semibold mt-4 mb-2">7. Suppression des enregistrements de la table Avion :</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">DELETE FROM Avion;</pre>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Interrogation (SELECT) -->
+            <section id="interrogation-select">
+                <h3 class="sub-section-title">d. Interrogation: les clauses de SELECT</h3>
+                <p class="mb-4">
+                    La commande <code class="font-mono text-sm">SELECT</code> permet d'extraire des données des tables et de les afficher sous forme de tableau.
+                </p>
+                <p class="font-bold text-gray-800 mb-2">Base utilisée pour les exemples :</p>
+                <div class="code-block">
+                    <pre class="font-mono text-sm">PILOTE(NUMPIL, NOMPIL, PRENOMPIL, ADRESSE, SALAIRE, PRIME)
+AVION(NUMAV, NOMAV, CAPACITE, LOCALISATION)
+VOL(NUMVOL, #NUMPIL, #NUMAV, DATE_VOL, HEURE_DEP, HEURE_ARR, VILLE_DEP, VILLE_ARR)</pre>
+                </div>
+                <p class="font-bold text-gray-800 mb-2">Syntaxe générale :</p>
+                <div class="code-block">
+                    <pre class="font-mono text-sm">SELECT [DISTINCT] &lt;nom de colonne&gt;[, &lt;nom de colonne&gt;]...
+FROM &lt;nom de table&gt;[, &lt;nom de table&gt;]...
+[WHERE &lt;condition&gt;]
+[GROUP BY &lt;nom de colonne&gt;[, &lt;nom de colonne&gt;]...
+[HAVING &lt;condition avec calculs verticaux&gt;]]
+[ORDER BY &lt;nom de colonne&gt;[, &lt;nom de colonne &gt;]...]</pre>
+                </div>
+
+                <h4 class="text-xl font-semibold text-gray-700 mb-2">Expression des projections</h4>
+                <div class="code-block">
+                    <pre class="font-mono text-sm">SELECT * FROM table;</pre>
+                </div>
+                <p class="mb-4">
+                    Le caractère <code class="font-mono text-sm">*</code> signifie qu'aucune projection n'est réalisée, i.e. que tous les attributs de la table font partie du résultat.
+                </p>
+                <button class="example-toggle" data-target="select-all-example">Exemple</button>
+                <div id="select-all-example" class="hidden-content">
+                    <p class="font-semibold mb-2">Exemple : Donner toutes les informations sur les pilotes.</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">SELECT * FROM PILOTE;</pre>
+                    </div>
+                    <table class="result-table">
+                        <thead>
+                            <tr><th>NUMPIL</th><th>NOMPIL</th><th>PRENOMPIL</th><th>ADRESSE</th><th>SALAIRE</th><th>PRIME</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>100</td><td>SMITH</td><td>John</td><td>PARIS</td><td>50000</td><td>5000</td></tr>
+                            <tr><td>101</td><td>DUPONT</td><td>Alice</td><td>LYON</td><td>45000</td><td>3000</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p class="mb-4">
+                    Pour sélectionner des colonnes spécifiques :
+                </p>
+                <div class="code-block">
+                    <pre class="font-mono text-sm">SELECT NOMPIL, ADRESSE FROM PILOTE;</pre>
+                </div>
+                <button class="example-toggle" data-target="select-specific-example">Exemple</button>
+                <div id="select-specific-example" class="hidden-content">
+                    <p class="font-semibold mb-2">Exemple : Donner le nom et l'adresse des pilotes.</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">SELECT NOMPIL, ADRESSE FROM PILOTE;</pre>
+                    </div>
+                    <table class="result-table">
+                        <thead>
+                            <tr><th>NOMPIL</th><th>ADRESSE</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>SMITH</td><td>PARIS</td></tr>
+                            <tr><td>DUPONT</td><td>LYON</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p class="font-bold text-gray-800 mb-2">Alias :</p>
+                <div class="code-block">
+                    <pre class="font-mono text-sm">SELECT colonne [alias],...</pre>
+                </div>
+                <button class="example-toggle" data-target="select-alias-example">Exemple</button>
+                <div id="select-alias-example" class="hidden-content">
+                    <p class="font-semibold mb-2">Exemple : Sélectionner l'identificateur et le nom de chaque pilote avec des alias.</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">SELECT NUMPIL "Num pilote", NOMPIL Nom_du_pilote FROM PILOTE;</pre>
+                    </div>
+                    <table class="result-table">
+                        <thead>
+                            <tr><th>Num pilote</th><th>Nom_du_pilote</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>100</td><td>SMITH</td></tr>
+                            <tr><td>101</td><td>DUPONT</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p class="font-bold text-gray-800 mb-2">Suppression des duplicats : <code class="font-mono text-sm">DISTINCT</code></p>
+                <div class="code-block">
+                    <pre class="font-mono text-sm">SELECT DISTINCT VILLE_DEP FROM VOL;</pre>
+                </div>
+                <button class="example-toggle" data-target="select-distinct-example">Exemple</button>
+                <div id="select-distinct-example" class="hidden-content">
+                    <p class="font-semibold mb-2">Exemple : Quelles sont toutes les villes de départ des vols ?</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">SELECT DISTINCT VILLE_DEP FROM VOL;</pre>
+                    </div>
+                    <table class="result-table">
+                        <thead>
+                            <tr><th>VILLE_DEP</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>MARSEILLE</td></tr>
+                            <tr><td>PARIS</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h4 class="text-xl font-semibold text-gray-700 mb-2">Expression des sélections (WHERE)</h4>
+                <p class="mb-4">
+                    La clause <code class="font-mono text-sm">WHERE</code> permet de filtrer les lignes en fonction d'une condition.
+                </p>
+                <div class="code-block">
+                    <pre class="font-mono text-sm">SELECT NOMPIL FROM PILOTE WHERE ADRESSE = 'MARSEILLE';</pre>
+                </div>
+                <button class="example-toggle" data-target="where-example">Exemple</button>
+                <div id="where-example" class="hidden-content">
+                    <p class="font-semibold mb-2">Exemple : Donner le nom des pilotes qui habitent à Marseille.</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">SELECT NOMPIL FROM PILOTE WHERE ADRESSE = 'MARSEILLE';</pre>
+                    </div>
+                    <table class="result-table">
+                        <thead>
+                            <tr><th>NOMPIL</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>MARTIN</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p class="font-bold text-gray-800 mb-2">Autres opérateurs spécifiques :</p>
+                <ul class="list-disc list-inside mb-4">
+                    <li><code class="font-mono text-sm">IS NULL</code> / <code class="font-mono text-sm">IS NOT NULL</code>: teste si la valeur est nulle ou non.</li>
+                    <li><code class="font-mono text-sm">IN (liste)</code> / <code class="font-mono text-sm">NOT IN (liste)</code>: teste si la valeur est présente ou non dans une liste.</li>
+                    <li><code class="font-mono text-sm">BETWEEN v1 AND v2</code> / <code class="font-mono text-sm">NOT BETWEEN v1 AND v2</code>: teste si la valeur est comprise ou non entre v1 et v2.</li>
+                    <li><code class="font-mono text-sm">LIKE 'chaîne_générique'</code> / <code class="font-mono text-sm">NOT LIKE 'chaîne_générique'</code>: recherche des motifs dans les chaînes (avec <code class="font-mono text-sm">%</code> pour n'importe quelle séquence de caractères, <code class="font-mono text-sm">_</code> pour un seul caractère).</li>
+                    <li>Opérateurs logiques : <code class="font-mono text-sm">AND</code>, <code class="font-mono text-sm">OR</code>.</li>
+                </ul>
+                <button class="example-toggle" data-target="where-operators-example">Exemple</button>
+                <div id="where-operators-example" class="hidden-content">
+                    <p class="font-semibold mb-2">Exemple : Rechercher les avions de nom A310, A320, A330 et A340.</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">SELECT * FROM AVION WHERE NOMAV IN ('A310', 'A320', 'A330', 'A340');</pre>
+                    </div>
+                    <table class="result-table">
+                        <thead>
+                            <tr><th>NUMAV</th><th>NOMAV</th><th>CAPACITE</th><th>LOCALISATION</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>1</td><td>A310</td><td>200</td><td>PARIS</td></tr>
+                            <tr><td>3</td><td>A330</td><td>350</td><td>LYON</td></tr>
+                        </tbody>
+                    </table>
+
+                    <p class="font-semibold mt-4 mb-2">Exemple : Quels sont les noms des pilotes qui gagnent entre 3.000 et 5.000 ?</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">SELECT NOMPIL FROM PILOTE WHERE SALAIRE BETWEEN 3000 AND 5000;</pre>
+                    </div>
+                    <table class="result-table">
+                        <thead>
+                            <tr><th>NOMPIL</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>DUPONT</td></tr>
+                        </tbody>
+                    </table>
+
+                    <p class="font-semibold mt-4 mb-2">Exemple : Quelle est la capacité des avions de type Airbus ?</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">SELECT CAPACITE FROM AVION WHERE NOMAV LIKE 'A%';</pre>
+                    </div>
+                    <table class="result-table">
+                        <thead>
+                            <tr><th>CAPACITE</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>200</td></tr>
+                            <tr><td>300</td></tr>
+                            <tr><td>350</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h4 class="text-xl font-semibold text-gray-700 mb-2">Calculs horizontaux</h4>
+                <p class="mb-4">
+                    Des expressions arithmétiques et fonctions peuvent être utilisées dans les clauses <code class="font-mono text-sm">WHERE</code> et <code class="font-mono text-sm">SELECT</code>.
+                </p>
+                <div class="code-block">
+                    <pre class="font-mono text-sm">SELECT NUMPIL, NOMPIL, SALAIRE + PRIME FROM PILOTE WHERE ADRESSE = 'BORDEAUX';</pre>
+                </div>
+                <button class="example-toggle" data-target="horizontal-calc-example">Exemple</button>
+                <div id="horizontal-calc-example" class="hidden-content">
+                    <p class="font-semibold mb-2">Exemple : Donner le revenu mensuel des pilotes Bordelais.</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">SELECT NUMPIL, NOMPIL, SALAIRE + PRIME FROM PILOTE WHERE ADRESSE = 'BORDEAUX';</pre>
+                    </div>
+                    <table class="result-table">
+                        <thead>
+                            <tr><th>NUMPIL</th><th>NOMPIL</th><th>SALAIRE + PRIME</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>102</td><td>DURAND</td><td>55000</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p class="mt-4 mb-2">
+                    Fonctions Oracle courantes (liste non exhaustive) :
+                </p>
+                <ul class="list-disc list-inside mb-4 text-sm">
+                    <li><code class="font-mono text-sm">ABS(n)</code>: valeur absolue de n.</li>
+                    <li><code class="font-mono text-sm">FLOOR(n)</code>: partie entière de n.</li>
+                    <li><code class="font-mono text-sm">POWER(m, n)</code>: m à la puissance n.</li>
+                    <li><code class="font-mono text-sm">TRUNC(n[, m])</code>: n tronqué à m décimales.</li>
+                    <li><code class="font-mono text-sm">ROUND(n [, d])</code>: arrondit n.</li>
+                    <li><code class="font-mono text-sm">CEIL(n)</code>: entier directement supérieur ou égal à n.</li>
+                    <li><code class="font-mono text-sm">MOD(n, m)</code>: n modulo m.</li>
+                    <li><code class="font-mono text-sm">SIGN(n)</code>: 1 si n>0, 0 si n=0, -1 si n<0.</li>
+                    <li><code class="font-mono text-sm">SQRT(n)</code>: racine carrée de n.</li>
+                    <li><code class="font-mono text-sm">GREATEST(n1, n2,...)</code>: la plus grande valeur de la suite.</li>
+                    <li><code class="font-mono text-sm">LEAST(n1,n2,...)</code>: la plus petite valeur de la liste.</li>
+                    <li><code class="font-mono text-sm">NVL(n1, n2)</code>: substitue n2 à n1 si n1 est nul.</li>
+                    <li><code class="font-mono text-sm">LENGTH(ch)</code>: longueur de la chaîne.</li>
+                    <li><code class="font-mono text-sm">SUBSTR(ch, pos [, long])</code>: extraction d'une sous-chaîne.</li>
+                    <li><code class="font-mono text-sm">INSTR(ch, ssch [, pos [, n]])</code>: position de la sous-chaîne dans la chaîne.</li>
+                    <li><code class="font-mono text-sm">UPPER(ch)</code>: mise en majuscules.</li>
+                    <li><code class="font-mono text-sm">LOWER(ch)</code>: mise en minuscules.</li>
+                    <li><code class="font-mono text-sm">INITCAP(ch)</code>: initiale en majuscules.</li>
+                    <li><code class="font-mono text-sm">LPAD(ch, long [, car])</code>: complète ch à gauche.</li>
+                    <li><code class="font-mono text-sm">RPAD(ch, long [, car])</code>: complète ch à droite.</li>
+                    <li><code class="font-mono text-sm">LTRIM(ch, car)</code>: élague à gauche.</li>
+                    <li><code class="font-mono text-sm">RTRIM(ch, car)</code>: élague à droite.</li>
+                    <li><code class="font-mono text-sm">TRANSLATE(ch, car_source, car_cible)</code>: change caractères.</li>
+                    <li><code class="font-mono text-sm">TO_CHAR(nombre, ch)</code>: convertit un nombre ou une date en chaîne.</li>
+                    <li><code class="font-mono text-sm">TO_NUMBER(ch)</code>: convertit la chaîne en numérique.</li>
+                    <li><code class="font-mono text-sm">ASCII(ch)</code>: code ASCII du premier caractère.</li>
+                    <li><code class="font-mono text-sm">CHR(n)</code>: conversion en caractère d'un code ASCII.</li>
+                    <li><code class="font-mono text-sm">TO_DATE(ch[, fmt])</code>: convertit une chaîne en date.</li>
+                    <li><code class="font-mono text-sm">ADD_MONTHS(date, nombre)</code>: ajout de mois à une date.</li>
+                    <li><code class="font-mono text-sm">MONTHS_BETWEEN(date1, date2)</code>: nombre de mois entre deux dates.</li>
+                    <li><code class="font-mono text-sm">LAST_DAY(date)</code>: date du dernier jour du mois.</li>
+                    <li><code class="font-mono text-sm">NEXT_DAY(date, nom du jour)</code>: date du prochain jour de la semaine.</li>
+                    <li><code class="font-mono text-sm">SYSDATE</code>: date du jour.</li>
+                </ul>
+
+                <h4 class="text-xl font-semibold text-gray-700 mb-2">Calculs verticaux (fonctions agrégatives)</h4>
+                <p class="mb-4">
+                    Les fonctions agrégatives s'appliquent à un ensemble de valeurs d'un attribut (numérique sauf <code class="font-mono text-sm">COUNT</code>). Le résultat est évalué une seule fois pour tous les tuples.
+                </p>
+                <ul class="list-disc list-inside mb-4">
+                    <li><code class="font-mono text-sm">SUM</code>: somme.</li>
+                    <li><code class="font-mono text-sm">AVG</code>: moyenne arithmétique.</li>
+                    <li><code class="font-mono text-sm">COUNT</code>: nombre ou cardinalité.</li>
+                    <li><code class="font-mono text-sm">MAX</code>: valeur maximale.</li>
+                    <li><code class="font-mono text-sm">MIN</code>: valeur minimale.</li>
+                    <li><code class="font-mono text-sm">STDDEV</code>: écart type.</li>
+                    <li><code class="font-mono text-sm">VARIANCE</code>: variance.</li>
+                </ul>
+                <button class="example-toggle" data-target="aggregate-functions-example">Exemple</button>
+                <div id="aggregate-functions-example" class="hidden-content">
+                    <p class="font-semibold mb-2">Exemple : Quel est le salaire moyen des pilotes Marseillais ?</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">SELECT AVG(SALAIRE)
+FROM PILOTE
+WHERE ADRESSE = 'MARSEILLE';</pre>
+                    </div>
+                    <table class="result-table">
+                        <thead>
+                            <tr><th>AVG(SALAIRE)</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>40000</td></tr>
+                        </tbody>
+                    </table>
+
+                    <p class="font-semibold mt-4 mb-2">Exemple : Trouver le nombre de vols au départ de Marseille.</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">SELECT COUNT(NUMVOL)
+FROM VOL
+WHERE VILLE_DEP = 'MARSEILLE';</pre>
+                    </div>
+                    <table class="result-table">
+                        <thead>
+                            <tr><th>COUNT(NUMVOL)</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>2</td></tr>
+                        </tbody>
+                    </table>
+                    <p class="mt-2 text-sm text-gray-600">
+                        <code class="font-mono text-sm">COUNT(*)</code> peut aussi être utilisé.
+                    </p>
+                </div>
+
+                <h4 class="text-xl font-semibold text-gray-700 mb-2">Expression des jointures sous forme prédicative</h4>
+                <p class="mb-4">
+                    Les jointures extraient des données de plusieurs tables. La clause <code class="font-mono text-sm">FROM</code> contient les noms de toutes les tables, et <code class="font-mono text-sm">WHERE</code> exprime le critère de jointure. Si <code class="font-mono text-sm">n</code> tables sont dans <code class="font-mono text-sm">FROM</code>, il faut au moins <code class="font-mono text-sm">(n-1)</code> opérations de jointure pour éviter un produit cartésien non désiré.
+                </p>
+                <div class="code-block">
+                    <pre class="font-mono text-sm">SELECT colonne,... FROM table1, table2... WHERE &lt;condition&gt;;</pre>
+                </div>
+                <button class="example-toggle" data-target="join-predicative-example">Exemple</button>
+                <div id="join-predicative-example" class="hidden-content">
+                    <p class="font-semibold mb-2">Exemple : Quel est le numéro et le nom des pilotes résidant dans la ville de localisation de l'avion n° 33 ?</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">SELECT NUMPIL, NOMPIL FROM PILOTE, AVION WHERE ADRESSE = LOCALISATION AND NUMAV = 33;</pre>
+                    </div>
+                    <table class="result-table">
+                        <thead>
+                            <tr><th>NUMPIL</th><th>NOMPIL</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>101</td><td>DUPONT</td></tr>
+                        </tbody>
+                    </table>
+                    <p class="mt-2 text-sm text-gray-600">
+                        Les noms des colonnes doivent être uniques ou qualifiés avec le nom de la table (ex: <code class="font-mono text-sm">PILOTE.NUMPIL</code>).
+                    </p>
+                </div>
+
+                <p class="font-bold text-gray-800 mb-2">Alias de nom de table :</p>
+                <div class="code-block">
+                    <pre class="font-mono text-sm">SELECT AUTRES.NUMAV, AUTRES.NOMAV FROM AVION AUTRES, AVION AV103 WHERE AV103.NUMAV = 103 AND AUTRES.NUMAV &lt;&gt; 103 AND AV103.LOCALISATION = AUTRES.LOCALISATION;</pre>
+                </div>
+                <button class="example-toggle" data-target="table-alias-example">Exemple</button>
+                <div id="table-alias-example" class="hidden-content">
+                    <p class="font-semibold mb-2">Exemple : Quels sont les avions localisés dans la même ville que l'avion numéro 103 ?</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">SELECT AUTRES.NUMAV, AUTRES.NOMAV
+FROM AVION AUTRES, AVION AV103
+WHERE AV103.NUMAV = 103
+AND AUTRES.NUMAV &lt;&gt; 103
+AND AV103.LOCALISATION = AUTRES.LOCALISATION;</pre>
+                    </div>
+                    <table class="result-table">
+                        <thead>
+                            <tr><th>NUMAV</th><th>NOMAV</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>105</td><td>AIRBUS A380</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h4 class="text-xl font-semibold text-gray-700 mb-2">Autre expression de jointures : forme imbriquée (Sous-requêtes)</h4>
+                <p class="mb-4">
+                    Les sous-requêtes sont utilisées pour filtrer les résultats d'une requête principale en fonction des résultats d'une autre requête.
+                </p>
+
+                <p class="font-bold text-gray-800 mb-2">1. Résultat de la sous-requête est une seule valeur :</p>
+                <div class="code-block">
+                    <pre class="font-mono text-sm">SELECT NOMPIL FROM PILOTE WHERE SALAIRE > (SELECT AVG(SALAIRE) FROM PILOTE);</pre>
+                </div>
+                <button class="example-toggle" data-target="subquery-single-value-example">Exemple</button>
+                <div id="subquery-single-value-example" class="hidden-content">
+                    <p class="font-semibold mb-2">Exemple : Quels sont les noms des pilotes gagnant plus que le salaire moyen des pilotes ?</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">SELECT NOMPIL FROM PILOTE WHERE SALAIRE > (SELECT AVG(SALAIRE) FROM PILOTE);</pre>
+                    </div>
+                    <table class="result-table">
+                        <thead>
+                            <tr><th>NOMPIL</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>SMITH</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p class="font-bold text-gray-800 mb-2">2. Résultat de la sous-requête est une liste de valeurs (<code class="font-mono text-sm">ANY</code>, <code class="font-mono text-sm">ALL</code>, <code class="font-mono text-sm">IN</code>) :</p>
+                <div class="code-block">
+                    <pre class="font-mono text-sm">SELECT NOMPIL FROM PILOTE WHERE NUMPIL IN (SELECT DISTINCT NUMPIL FROM VOL WHERE VILLE_DEP = 'MARSEILLE');</pre>
+                </div>
+                <button class="example-toggle" data-target="subquery-list-value-example">Exemple</button>
+                <div id="subquery-list-value-example" class="hidden-content">
+                    <p class="font-semibold mb-2">Exemple : Quels sont les noms des pilotes en service au départ de Marseille ?</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">SELECT NOMPIL FROM PILOTE WHERE NUMPIL IN (SELECT DISTINCT NUMPIL FROM VOL WHERE VILLE_DEP = 'MARSEILLE');</pre>
+                    </div>
+                    <table class="result-table">
+                        <thead>
+                            <tr><th>NOMPIL</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>MARTIN</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p class="font-bold text-gray-800 mb-2">3. Résultat de la sous-requête est un ensemble de colonnes :</p>
+                <div class="code-block">
+                    <pre class="font-mono text-sm">SELECT NOMPIL FROM PILOTE WHERE NOMPIL &lt;&gt; 'DUPONT' AND (ADRESSE, SALAIRE) IN (SELECT ADRESSE, SALAIRE FROM PILOTE WHERE NOMPIL = 'DUPONT');</pre>
+                </div>
+                <button class="example-toggle" data-target="subquery-multi-column-example">Exemple</button>
+                <div id="subquery-multi-column-example" class="hidden-content">
+                    <p class="font-semibold mb-2">Exemple : Rechercher le nom des pilotes ayant même adresse et même salaire que Dupont (mais pas Dupont lui-même).</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">SELECT NOMPIL
+FROM PILOTE
+WHERE NOMPIL &lt;&gt; 'DUPONT'
+AND (ADRESSE, SALAIRE) IN
+(SELECT ADRESSE, SALAIRE FROM PILOTE WHERE NOMPIL = 'DUPONT');</pre>
+                    </div>
+                    <table class="result-table">
+                        <thead>
+                            <tr><th>NOMPIL</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>LEBRETON</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h4 class="text-xl font-semibold text-gray-700 mb-2">Tri des résultats (<code class="font-mono text-sm">ORDER BY</code>)</h4>
+                <p class="mb-4">
+                    Permet d'ordonner les résultats en ordre croissant (<code class="font-mono text-sm">ASC</code>) ou décroissant (<code class="font-mono text-sm">DESC</code>).
+                </p>
+                <div class="code-block">
+                    <pre class="font-mono text-sm">ORDER BY expression [ASC | DESC],...</pre>
+                </div>
+                <button class="example-toggle" data-target="order-by-example">Exemple</button>
+                <div id="order-by-example" class="hidden-content">
+                    <p class="font-semibold mb-2">Exemple : Lister les pilotes Marseillais par ordre de salaire décroissant et par ordre alphabétique des noms.</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">SELECT NOMPIL, SALAIRE
+FROM PILOTE
+WHERE ADRESSE = 'MARSEILLE'
+ORDER BY SALAIRE DESC, NOMPIL;</pre>
+                    </div>
+                    <table class="result-table">
+                        <thead>
+                            <tr><th>NOMPIL</th><th>SALAIRE</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>MARTIN</td><td>40000</td></tr>
+                            <tr><td>DURAND</td><td>35000</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h4 class="text-xl font-semibold text-gray-700 mb-2">Test d'absence de données (<code class="font-mono text-sm">NOT IN</code>, <code class="font-mono text-sm">NOT EXISTS</code>, <code class="font-mono text-sm">MINUS</code>)</h4>
+                <p class="mb-4">
+                    Ces opérateurs permettent de trouver des éléments qui ne sont pas présents dans un certain ensemble.
+                </p>
+                <p class="font-bold text-gray-800 mb-2">Utilisation de <code class="font-mono text-sm">NOT IN</code> :</p>
+                <div class="code-block">
+                    <pre class="font-mono text-sm">SELECT NUMPIL, NOMPIL FROM PILOTE WHERE NUMPIL NOT IN (SELECT NUMPIL FROM VOL);</pre>
+                </div>
+                <button class="example-toggle" data-target="not-in-example">Exemple</button>
+                <div id="not-in-example" class="hidden-content">
+                    <p class="font-semibold mb-2">Exemple : Quels sont les pilotes n'effectuant aucun vol ?</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">SELECT NUMPIL, NOMPIL
+FROM PILOTE
+WHERE NUMPIL NOT IN
+(SELECT NUMPIL FROM VOL);</pre>
+                    </div>
+                    <table class="result-table">
+                        <thead>
+                            <tr><th>NUMPIL</th><th>NOMPIL</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>103</td><td>CHARLIE</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p class="font-bold text-gray-800 mb-2">Utilisation de <code class="font-mono text-sm">NOT EXISTS</code> :</p>
+                <div class="code-block">
+                    <pre class="font-mono text-sm">SELECT NUMPIL, NOMPIL FROM PILOTE PIL WHERE NOT EXISTS (SELECT NUMPIL FROM VOL WHERE VOL.NUMPIL = PIL.NUMPIL);</pre>
+                </div>
+                <button class="example-toggle" data-target="not-exists-example">Exemple</button>
+                <div id="not-exists-example" class="hidden-content">
+                    <p class="font-semibold mb-2">Exemple : Quels sont les pilotes n'effectuant aucun vol (avec <code class="font-mono text-sm">NOT EXISTS</code>) ?</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">SELECT NUMPIL, NOMPIL
+FROM PILOTE PIL
+WHERE NOT EXISTS
+(SELECT NUMPIL FROM VOL WHERE VOL.NUMPIL = PIL.NUMPIL);</pre>
+                    </div>
+                    <table class="result-table">
+                        <thead>
+                            <tr><th>NUMPIL</th><th>NOMPIL</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>103</td><td>CHARLIE</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p class="font-bold text-gray-800 mb-2">Utilisation de <code class="font-mono text-sm">MINUS</code> (différence d'ensembles) :</p>
+                <div class="code-block">
+                    <pre class="font-mono text-sm">SELECT NUMPIL FROM PILOTE MINUS SELECT NUMPIL FROM VOL;</pre>
+                </div>
+                <button class="example-toggle" data-target="minus-example">Exemple</button>
+                <div id="minus-example" class="hidden-content">
+                    <p class="font-semibold mb-2">Exemple : Quels sont les pilotes n'effectuant aucun vol (avec <code class="font-mono text-sm">MINUS</code>) ?</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">SELECT NUMPIL FROM PILOTE
+MINUS
+SELECT NUMPIL FROM VOL;</pre>
+                    </div>
+                    <table class="result-table">
+                        <thead>
+                            <tr><th>NUMPIL</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>103</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h4 class="text-xl font-semibold text-gray-700 mb-2">Classification ou partitionnement (<code class="font-mono text-sm">GROUP BY</code>)</h4>
+                <p class="mb-4">
+                    La clause <code class="font-mono text-sm">GROUP BY</code> regroupe les lignes d'une table en classes d'équivalence en fonction des valeurs d'une ou plusieurs colonnes.
+                </p>
+                <div class="code-block">
+                    <pre class="font-mono text-sm">GROUP BY colonnel, [colonne2,...]</pre>
+                </div>
+                <button class="example-toggle" data-target="group-by-example">Exemple</button>
+                <div id="group-by-example" class="hidden-content">
+                    <p class="font-semibold mb-2">Exemple : Quel est le nombre de vols effectués par chaque pilote ?</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">SELECT NUMPIL, COUNT(NUMVOL)
+FROM VOL
+GROUP BY NUMPIL;</pre>
+                    </div>
+                    <table class="result-table">
+                        <thead>
+                            <tr><th>NUMPIL</th><th>COUNT(NUMVOL)</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>100</td><td>2</td></tr>
+                            <tr><td>102</td><td>2</td></tr>
+                            <tr><td>105</td><td>4</td></tr>
+                            <tr><td>124</td><td>1</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h4 class="text-xl font-semibold text-gray-700 mb-2">Recherche dans les sous-tables (<code class="font-mono text-sm">HAVING</code>)</h4>
+                <p class="mb-4">
+                    La clause <code class="font-mono text-sm">HAVING</code> permet de filtrer les groupes créés par <code class="font-mono text-sm">GROUP BY</code>. Elle est utilisée pour des conditions impliquant des fonctions agrégatives sur les groupes.
+                </p>
+                <div class="code-block">
+                    <pre class="font-mono text-sm">HAVING condition</pre>
+                </div>
+                <button class="example-toggle" data-target="having-example">Exemple</button>
+                <div id="having-example" class="hidden-content">
+                    <p class="font-semibold mb-2">Exemple : Donner le nombre de vols, s'il est supérieur à 5, par pilote.</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">SELECT NUMPIL, COUNT(NUMVOL)
+FROM VOL
+GROUP BY NUMPIL
+HAVING COUNT(NUMVOL) > 5;</pre>
+                    </div>
+                    <table class="result-table">
+                        <thead>
+                            <tr><th>NUMPIL</th><th>COUNT(NUMVOL)</th></tr>
+                        </thead>
+                        <tbody>
+                            <!-- Pas de résultat si aucun pilote n'a plus de 5 vols dans l'exemple donné -->
+                        </tbody>
+                    </table>
+                    <p class="mt-2 text-sm text-gray-600">
+                        Cette requête affichera les pilotes qui ont effectué plus de 5 vols.
+                    </p>
+                </div>
+
+                <h4 class="text-xl font-semibold text-gray-700 mb-2">Recherche dans une arborescence (<code class="font-mono text-sm">CONNECT BY</code>)</h4>
+                <p class="mb-4">
+                    Oracle permet de naviguer dans des structures de données hiérarchiques ou arborescentes.
+                </p>
+                <div class="code-block">
+                    <pre class="font-mono text-sm">SELECT colonne,...
+FROM table [alias],...
+[WHERE condition]
+CONNECT BY [PRIOR] colonnel = [PRIOR] colonne 2
+[AND condition]
+[START WITH condition]
+[ORDER BY LEVEL]</pre>
+                </div>
+                <ul class="list-disc list-inside mb-4">
+                    <li><code class="font-mono text-sm">START WITH</code>: fixe le point de départ de la recherche.</li>
+                    <li><code class="font-mono text-sm">CONNECT BY PRIOR</code>: fixe le sens de parcours (haut en bas si PRIOR est devant le fils, bas en haut si devant le père).</li>
+                    <li><code class="font-mono text-sm">LEVEL</code>: niveau du nœud dans l'arborescence (utile pour l'indentation).</li>
+                </ul>
+                <button class="example-toggle" data-target="connect-by-example">Exemple</button>
+                <div id="connect-by-example" class="hidden-content">
+                    <p class="font-semibold mb-2">Exemple : Donner la liste des villes desservies en France.</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">SELECT LIEUSPEC
+FROM LIEU
+CONNECT BY PRIOR LIEUSPEC = LIEUGEN
+START WITH LIEUGEN = 'FRANCE';</pre>
+                    </div>
+                    <table class="result-table">
+                        <thead>
+                            <tr><th>LIEUSPEC</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>PACA</td></tr>
+                            <tr><td>Marseille</td></tr>
+                            <tr><td>Aix</td></tr>
+                            <tr><td>Cassis</td></tr>
+                            <tr><td>ILE-DE-FRANCE</td></tr>
+                            <tr><td>PARIS</td></tr>
+                        </tbody>
+                    </table>
+
+                    <p class="font-semibold mt-4 mb-2">Exemple : Obtenir la liste des villes desservies en France avec une présentation claire (indentation).</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">SELECT LPAD('-', 2*LEVEL,' ')|| LIEUSPEC
+FROM LIEU
+CONNECT BY PRIOR LIEUSPEC = LIEUGEN
+START WITH LIEUGEN = 'FRANCE'
+ORDER BY LEVEL;</pre>
+                    </div>
+                    <table class="result-table">
+                        <thead>
+                            <tr><th>LPAD('-', 2*LEVEL,' ')|| LIEUSPEC</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td> FRANCE</td></tr>
+                            <tr><td>  PACA</td></tr>
+                            <tr><td>   Marseille</td></tr>
+                            <tr><td>   Aix</td></tr>
+                            <tr><td>   Cassis</td></tr>
+                            <tr><td>  ILE-DE-FRANCE</td></tr>
+                            <tr><td>   PARIS</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Exercice Interrogation (SELECT) -->
+            <section id="exercice-interrogation" class="mt-8">
+                <h3 class="sub-section-title">Exercice d'application : Interrogation de la base de données (SELECT)</h3>
+                <p class="mb-4">Considérons la base de données suivante :</p>
+                <div class="code-block">
+                    <pre class="font-mono text-sm">Employe(num_emp, nom_emp, fonction, manager, date_emb, salaire, commission, #num_dept)
+Departement(num_dept, nom_dept, locale)</pre>
+                </div>
+                <p class="mb-4">Écrire les scripts SQL qui permettent d'obtenir les informations suivantes.</p>
+                <ol class="list-decimal list-inside mt-6 mb-4">
+                    <li>Informations sur les employés dont la fonction est "MANAGER" dans les départements 20 et 30.</li>
+                    <li>Liste des employés qui n'ont pas la fonction "MANAGER" et qui ont été embauchés en 81.</li>
+                    <li>Liste des employés ayant un "M" et un "A" dans leur nom.</li>
+                    <li>Liste des employés ayant deux "A" dans leur nom.</li>
+                    <li>Liste des employés ayant une commission.</li>
+                    <li>Liste des employés travaillant à "DALLAS".</li>
+                    <li>Noms et dates d'embauche des employés embauchés avant leur manager, avec le nom et la date d'embauche du manager.</li>
+                    <li>Noms et dates d'embauche des employés embauchés avant 'BLAKE'.</li>
+                    <li>Employés embauchés le même jour que 'FORD'.</li>
+                    <li>Employés ayant le même manager que 'CLARK'.</li>
+                    <li>Employés embauchés avant tous les employés du département 10.</li>
+                    <li>Employés ayant le même job et même manager que 'TURNER'.</li>
+                    <li>Employés du département 'RESEARCH' embauchés le même jour que quelqu'un du département 'SALES'.</li>
+                    <li>Employés gagnant plus que leur manager.</li>
+                    <li>Liste des noms des employés avec les salaires tronqués au millier.</li>
+                </ol>
+
+                <button class="application-toggle" data-target="exercice-interrogation-correction">Correction</button>
+                <div id="exercice-interrogation-correction" class="hidden-content">
+                    <h4 class="text-xl font-semibold text-gray-700 mb-2">Correction :</h4>
+
+                    <p class="font-semibold mt-4 mb-2">1. Employés fonction 'MANAGER' dans départements 20 et 30 :</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">SELECT *
+FROM Employe
+WHERE fonction = 'MANAGER'
+AND num_dept IN (20, 30);</pre>
+                    </div>
+
+                    <p class="font-semibold mt-4 mb-2">2. Employés sans fonction 'MANAGER' et embauchés en 81 :</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">SELECT *
+FROM Employe
+WHERE fonction &lt;&gt; 'MANAGER'
+AND TO_CHAR(date_emb, 'YY') = '81';</pre>
+                    </div>
+
+                    <p class="font-semibold mt-4 mb-2">3. Employés ayant un "M" et un "A" dans leur nom :</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">SELECT nom_emp
+FROM Employe
+WHERE nom_emp LIKE '%M%' AND nom_emp LIKE '%A%';</pre>
+                    </div>
+
+                    <p class="font-semibold mt-4 mb-2">4. Employés ayant deux "A" dans leur nom :</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">SELECT nom_emp
+FROM Employe
+WHERE nom_emp LIKE '%A%A%';</pre>
+                    </div>
+
+                    <p class="font-semibold mt-4 mb-2">5. Employés ayant une commission :</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">SELECT nom_emp
+FROM Employe
+WHERE commission IS NOT NULL AND commission > 0;</pre>
+                    </div>
+
+                    <p class="font-semibold mt-4 mb-2">6. Employés travaillant à "DALLAS" :</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">SELECT E.nom_emp
+FROM Employe E, Departement D
+WHERE E.num_dept = D.num_dept
+AND D.locale = 'DALLAS';</pre>
+                    </div>
+
+                    <p class="font-semibold mt-4 mb-2">7. Employés embauchés avant leur manager :</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">SELECT E.nom_emp, E.date_emb, M.nom_emp AS Manager_Nom, M.date_emb AS Manager_Date_Emb
+FROM Employe E, Employe M
+WHERE E.manager = M.num_emp
+AND E.date_emb &lt; M.date_emb;</pre>
+                    </div>
+
+                    <p class="font-semibold mt-4 mb-2">8. Employés embauchés avant 'BLAKE' :</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">SELECT nom_emp, date_emb
+FROM Employe
+WHERE date_emb &lt; (SELECT date_emb FROM Employe WHERE nom_emp = 'BLAKE');</pre>
+                    </div>
+
+                    <p class="font-semibold mt-4 mb-2">9. Employés embauchés le même jour que 'FORD' :</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">SELECT nom_emp
+FROM Employe
+WHERE TO_CHAR(date_emb, 'DD-MON-YYYY') = (SELECT TO_CHAR(date_emb, 'DD-MON-YYYY') FROM Employe WHERE nom_emp = 'FORD');</pre>
+                    </div>
+
+                    <p class="font-semibold mt-4 mb-2">10. Employés ayant le même manager que 'CLARK' :</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">SELECT nom_emp
+FROM Employe
+WHERE manager = (SELECT manager FROM Employe WHERE nom_emp = 'CLARK');</pre>
+                    </div>
+
+                    <p class="font-semibold mt-4 mb-2">11. Employés embauchés avant tous les employés du département 10 :</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">SELECT nom_emp
+FROM Employe
+WHERE date_emb &lt; ALL (SELECT date_emb FROM Employe WHERE num_dept = 10);</pre>
+                    </div>
+
+                    <p class="font-semibold mt-4 mb-2">12. Employés ayant le même job et même manager que 'TURNER' :</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">SELECT nom_emp
+FROM Employe
+WHERE (fonction, manager) = (SELECT fonction, manager FROM Employe WHERE nom_emp = 'TURNER');</pre>
+                    </div>
+
+                    <p class="font-semibold mt-4 mb-2">13. Employés du département 'RESEARCH' embauchés le même jour que quelqu'un du département 'SALES' :</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">SELECT E.nom_emp
+FROM Employe E, Departement DR, Employe ES, Departement DS
+WHERE E.num_dept = DR.num_dept AND DR.nom_dept = 'RESEARCH'
+AND ES.num_dept = DS.num_dept AND DS.nom_dept = 'SALES'
+AND TO_CHAR(E.date_emb, 'DD-MON-YYYY') = TO_CHAR(ES.date_emb, 'DD-MON-YYYY');</pre>
+                    </div>
+
+                    <p class="font-semibold mt-4 mb-2">14. Employés gagnant plus que leur manager :</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">SELECT E.nom_emp, E.salaire, M.nom_emp AS Manager_Nom, M.salaire AS Manager_Salaire
+FROM Employe E, Employe M
+WHERE E.manager = M.num_emp
+AND E.salaire > M.salaire;</pre>
+                    </div>
+
+                    <p class="font-semibold mt-4 mb-2">15. Noms des employés avec les salaires tronqués au millier :</p>
+                    <div class="code-block">
+                        <pre class="font-mono text-sm">SELECT nom_emp, TRUNC(salaire, -3) AS salaire_tronque
+FROM Employe;</pre>
+                    </div>
+                </div>
+            </section>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>Créé par youssef benaissa - IA étudiant</p>
+    </footer>
+
+    <script src="script.js"></script>
 </body>
 </html>
